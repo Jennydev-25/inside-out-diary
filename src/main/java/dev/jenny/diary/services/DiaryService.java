@@ -1,5 +1,8 @@
 package dev.jenny.diary.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dev.jenny.diary.contracts.InterfaceMomentRepository;
 import dev.jenny.diary.dtos.MomentDto;
 import dev.jenny.diary.mappers.MomentMapper;
@@ -31,5 +34,16 @@ public class DiaryService {
         Moment moment = momentMapper.toModel(momentDto);
         momentRepository.save(moment);
         return momentMapper.toDto(moment);
+    }
+
+    /**
+     * Returns every stored moment as a DTO.
+     *
+     * @return a list with all the moments, converted to DTOs
+     */
+    public List<MomentDto> getAllMoments() {
+        return momentRepository.findAll().stream()
+                .map(momentMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

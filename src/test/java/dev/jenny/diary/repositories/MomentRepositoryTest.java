@@ -45,4 +45,21 @@ class MomentRepositoryTest {
         List<Moment> moments = momentRepository.findAll();
         assertThat(moments, hasItem(moment));
     }
+
+    /**
+     * Verifies that findById returns the moment matching the given id.
+     */
+    @Test
+    void testFindByIdReturnsMatchingMoment() {
+        Moment moment = new Moment(
+                "Un día en el parque de atracciones",
+                "Un día genial con amigos",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 5, 1));
+        momentRepository.save(moment);
+
+        Moment found = momentRepository.findById(moment.getId());
+
+        assertThat(found, is(equalTo(moment)));
+    }
 }

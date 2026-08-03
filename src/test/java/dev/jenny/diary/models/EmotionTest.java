@@ -1,4 +1,4 @@
-package dev.jenny.diary.model;
+package dev.jenny.diary.models;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

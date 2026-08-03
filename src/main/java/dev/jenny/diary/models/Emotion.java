@@ -1,4 +1,4 @@
-package dev.jenny.diary.model;
+package dev.jenny.diary.models;
 
 /**
  * Emotions available to tag a diary moment, in the same order

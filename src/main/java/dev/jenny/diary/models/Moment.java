@@ -62,6 +62,16 @@ public class Moment {
         return updatedAt;
     }
 
+    /**
+     * Assigns this moment's id. Called by the repository at persistence
+     * time, since a Moment has no identity until it is actually saved.
+     *
+     * @param id the sequential id assigned by the repository
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private void setTimestamps() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;

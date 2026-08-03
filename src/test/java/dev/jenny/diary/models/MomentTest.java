@@ -16,15 +16,17 @@ import org.junit.jupiter.api.Test;
  */
 class MomentTest {
 
+    private static final String MOMENT_DESCRIPTION = "Fui con mis amigas al parque de atracciones y no paramos de reír en toda la tarde. "
+            + "Nos subimos a la montaña rusa cinco veces seguidas, aunque a la tercera ya me temblaban "
+            + "las piernas. Volví a casa agotada, pero con una sonrisa que no se me borraba.";
+
     private Moment moment;
 
     @BeforeEach
     void setUp() {
         moment = new Moment(
                 "Un día en el parque de atracciones",
-                "Fui con mis amigas al parque de atracciones y no paramos de reír en toda la tarde. "
-                        + "Nos subimos a la montaña rusa cinco veces seguidas, aunque a la tercera ya me "
-                        + "temblaban las piernas. Volví a casa agotada, pero con una sonrisa que no se me borraba.",
+                MOMENT_DESCRIPTION,
                 Emotion.ALEGRIA,
                 LocalDate.of(2024, 5, 1));
     }
@@ -39,10 +41,7 @@ class MomentTest {
         assertThat(moment, is(notNullValue()));
         assertThat(moment.getId(), is(nullValue()));
         assertThat(moment.getTitle(), is(equalTo("Un día en el parque de atracciones")));
-        assertThat(moment.getDescription(), is(equalTo(
-                "Fui con mis amigas al parque de atracciones y no paramos de reír en toda la tarde. "
-                        + "Nos subimos a la montaña rusa cinco veces seguidas, aunque a la tercera ya me "
-                        + "temblaban las piernas. Volví a casa agotada, pero con una sonrisa que no se me borraba.")));
+        assertThat(moment.getDescription(), is(equalTo(MOMENT_DESCRIPTION)));
         assertThat(moment.getEmotion(), is(equalTo(Emotion.ALEGRIA)));
         assertThat(moment.getMomentDate(), is(equalTo(LocalDate.of(2024, 5, 1))));
         assertThat(moment.getCreatedAt(), is(notNullValue()));

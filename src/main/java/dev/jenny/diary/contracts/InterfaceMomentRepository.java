@@ -31,4 +31,11 @@ public interface InterfaceMomentRepository {
      * @return the moment with that id, or null if none exists
      */
     Moment findById(Long id);
+
+    /**
+     * Deletes the moment with the given id, if it exists.
+     *
+     * @param id the id of the moment to delete
+     */
+    void deleteById(Long id);
 }

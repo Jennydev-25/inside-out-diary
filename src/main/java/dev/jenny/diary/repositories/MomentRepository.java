@@ -33,4 +33,9 @@ public class MomentRepository implements InterfaceMomentRepository {
     public Moment findById(Long id) {
         return database.findAll().get(id);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        database.deleteById(id);
+    }
 }

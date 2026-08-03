@@ -33,4 +33,13 @@ public class MomentInMemoryDatabase {
     public Map<Long, Moment> findAll() {
         return moments;
     }
+
+    /**
+     * Removes the moment with the given id, if it exists.
+     *
+     * @param id the id of the moment to remove
+     */
+    public void deleteById(Long id) {
+        moments.remove(id);
+    }
 }

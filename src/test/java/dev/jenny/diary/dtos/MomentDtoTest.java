@@ -15,23 +15,24 @@ import dev.jenny.diary.models.Emotion;
  */
 class MomentDtoTest {
 
+    private static final long MOMENT_ID = 1L;
+    private static final String MOMENT_TITLE = "Un día en el parque de atracciones";
+    private static final String MOMENT_DESCRIPTION = "Un día genial con amigos";
+    private static final Emotion MOMENT_EMOTION = Emotion.ALEGRIA;
+    private static final LocalDate MOMENT_DATE = LocalDate.of(2024, 5, 1);
+
     /**
      * Verifies that a MomentDto exposes all the data it was given,
      * without the internal creation/modification timestamps.
      */
     @Test
     void testMomentDtoExposesAllItsFields() {
-        MomentDto dto = new MomentDto(
-                1L,
-                "Un día en el parque de atracciones",
-                "Un día genial con amigos",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 5, 1));
+        MomentDto dto = new MomentDto(MOMENT_ID, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
 
-        assertThat(dto.id(), is(equalTo(1L)));
-        assertThat(dto.title(), is(equalTo("Un día en el parque de atracciones")));
-        assertThat(dto.description(), is(equalTo("Un día genial con amigos")));
-        assertThat(dto.emotion(), is(equalTo(Emotion.ALEGRIA)));
-        assertThat(dto.momentDate(), is(equalTo(LocalDate.of(2024, 5, 1))));
+        assertThat(dto.id(), is(equalTo(MOMENT_ID)));
+        assertThat(dto.title(), is(equalTo(MOMENT_TITLE)));
+        assertThat(dto.description(), is(equalTo(MOMENT_DESCRIPTION)));
+        assertThat(dto.emotion(), is(equalTo(MOMENT_EMOTION)));
+        assertThat(dto.momentDate(), is(equalTo(MOMENT_DATE)));
     }
 }

@@ -38,8 +38,12 @@ public enum Emotion {
      *
      * @param option the menu option chosen by the user (1-based)
      * @return the emotion matching that option
+     * @throws IllegalArgumentException if the option is not between 1 and 10
      */
     public static Emotion fromOption(int option) {
+        if (option < 1 || option > values().length) {
+            throw new IllegalArgumentException("Invalid emotion option: " + option);
+        }
         return values()[option - 1];
     }
 }

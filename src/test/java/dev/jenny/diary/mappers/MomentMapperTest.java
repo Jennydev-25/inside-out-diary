@@ -17,6 +17,12 @@ import dev.jenny.diary.models.Moment;
  */
 class MomentMapperTest {
 
+    private static final Long MOMENT_ID = 1L;
+    private static final String MOMENT_TITLE = "Un día en el parque de atracciones";
+    private static final String MOMENT_DESCRIPTION = "Un día genial con amigos";
+    private static final Emotion MOMENT_EMOTION = Emotion.ALEGRIA;
+    private static final LocalDate MOMENT_DATE = LocalDate.of(2024, 5, 1);
+
     private final MomentMapper mapper = new MomentMapper();
 
     /**
@@ -25,11 +31,7 @@ class MomentMapperTest {
      */
     @Test
     void testToDtoConvertsMomentIntoMomentDto() {
-        Moment moment = new Moment(
-                "Un día en el parque de atracciones",
-                "Un día genial con amigos",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 5, 1));
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
 
         MomentDto dto = mapper.toDto(moment);
 
@@ -46,12 +48,7 @@ class MomentMapperTest {
      */
     @Test
     void testToModelConvertsMomentDtoIntoMoment() {
-        MomentDto dto = new MomentDto(
-                1L,
-                "Un día en el parque de atracciones",
-                "Un día genial con amigos",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 5, 1));
+        MomentDto dto = new MomentDto(MOMENT_ID, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
 
         Moment moment = mapper.toModel(dto);
 

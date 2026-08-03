@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,5 +59,18 @@ class MomentRepositoryTest {
         Moment found = momentRepository.findById(moment.getId());
 
         assertThat(found, is(equalTo(moment)));
+    }
+
+    /**
+     * Verifies that deleteById removes the moment with the given id.
+     */
+    @Test
+    void testDeleteByIdRemovesMoment() {
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        momentRepository.save(moment);
+
+        momentRepository.deleteById(moment.getId());
+
+        assertThat(momentRepository.findAll(), not(hasItem(moment)));
     }
 }

@@ -23,4 +23,12 @@ public interface InterfaceMomentRepository {
      * @return a list with all the saved moments
      */
     List<Moment> findAll();
+
+    /**
+     * Finds a moment by its id.
+     *
+     * @param id the id to search for
+     * @return the moment with that id, or null if none exists
+     */
+    Moment findById(Long id);
 }

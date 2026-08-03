@@ -28,4 +28,9 @@ public class MomentRepository implements InterfaceMomentRepository {
     public List<Moment> findAll() {
         return new ArrayList<>(database.findAll().values());
     }
+
+    @Override
+    public Moment findById(Long id) {
+        return database.findAll().get(id);
+    }
 }

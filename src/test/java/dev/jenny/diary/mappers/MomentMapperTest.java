@@ -39,4 +39,25 @@ class MomentMapperTest {
         assertThat(dto.emotion(), is(equalTo(moment.getEmotion())));
         assertThat(dto.momentDate(), is(equalTo(moment.getMomentDate())));
     }
+
+    /**
+     * Verifies that toModel converts a MomentDto into a Moment with
+     * the same visible data.
+     */
+    @Test
+    void testToModelConvertsMomentDtoIntoMoment() {
+        MomentDto dto = new MomentDto(
+                1L,
+                "Un día en el parque de atracciones",
+                "Un día genial con amigos",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 5, 1));
+
+        Moment moment = mapper.toModel(dto);
+
+        assertThat(moment.getTitle(), is(equalTo(dto.title())));
+        assertThat(moment.getDescription(), is(equalTo(dto.description())));
+        assertThat(moment.getEmotion(), is(equalTo(dto.emotion())));
+        assertThat(moment.getMomentDate(), is(equalTo(dto.momentDate())));
+    }
 }

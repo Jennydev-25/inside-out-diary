@@ -24,4 +24,16 @@ public class MomentMapper {
                 moment.getEmotion(),
                 moment.getMomentDate());
     }
+
+    /**
+     * Converts a MomentDto into a new Moment. The resulting Moment gets
+     * fresh creation and modification timestamps, since the DTO does not
+     * carry the original ones.
+     *
+     * @param dto the DTO to convert
+     * @return a new Moment built from the DTO's visible data
+     */
+    public Moment toModel(MomentDto dto) {
+        return new Moment(dto.title(), dto.description(), dto.emotion(), dto.momentDate());
+    }
 }

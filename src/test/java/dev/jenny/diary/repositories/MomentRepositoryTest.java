@@ -20,6 +20,11 @@ import dev.jenny.diary.models.Moment;
  */
 class MomentRepositoryTest {
 
+    private static final String MOMENT_TITLE = "Un día en el parque de atracciones";
+    private static final String MOMENT_DESCRIPTION = "Un día genial con amigos";
+    private static final Emotion MOMENT_EMOTION = Emotion.ALEGRIA;
+    private static final LocalDate MOMENT_DATE = LocalDate.of(2024, 5, 1);
+
     private InterfaceMomentRepository momentRepository;
 
     @BeforeEach
@@ -33,11 +38,7 @@ class MomentRepositoryTest {
      */
     @Test
     void testSaveAssignsSequentialIdAndStoresMoment() {
-        Moment moment = new Moment(
-                "Un día en el parque de atracciones",
-                "Un día genial con amigos",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 5, 1));
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
 
         momentRepository.save(moment);
 
@@ -51,11 +52,7 @@ class MomentRepositoryTest {
      */
     @Test
     void testFindByIdReturnsMatchingMoment() {
-        Moment moment = new Moment(
-                "Un día en el parque de atracciones",
-                "Un día genial con amigos",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 5, 1));
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
         momentRepository.save(moment);
 
         Moment found = momentRepository.findById(moment.getId());

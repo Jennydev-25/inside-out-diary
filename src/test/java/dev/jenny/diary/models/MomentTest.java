@@ -75,4 +75,21 @@ class MomentTest {
         assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
         assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
     }
+
+    /**
+     * Verifies that setDescription replaces the description, refreshes
+     * the modification timestamp, and keeps the creation timestamp
+     * unchanged.
+     */
+    @Test
+    void testSetDescriptionUpdatesDescriptionAndRefreshesUpdatedAt() throws InterruptedException {
+        LocalDateTime originalCreatedAt = moment.getCreatedAt();
+        Thread.sleep(1);
+
+        moment.setDescription("Un día tranquilo en la playa, escuchando el mar.");
+
+        assertThat(moment.getDescription(), is(equalTo("Un día tranquilo en la playa, escuchando el mar.")));
+        assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
+        assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
+    }
 }

@@ -1,5 +1,7 @@
 package dev.jenny.diary.controllers;
 
+import java.util.List;
+
 import dev.jenny.diary.dtos.MomentDto;
 import dev.jenny.diary.services.DiaryService;
 
@@ -23,5 +25,14 @@ public class DiaryController {
      */
     public MomentDto addMoment(MomentDto momentDto) {
         return diaryService.addMoment(momentDto);
+    }
+
+    /**
+     * Returns every stored moment.
+     *
+     * @return a list with all the moments, as DTOs
+     */
+    public List<MomentDto> getAllMoments() {
+        return diaryService.getAllMoments();
     }
 }

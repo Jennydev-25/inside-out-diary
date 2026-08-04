@@ -49,6 +49,19 @@ public class DiaryService {
     }
 
     /**
+     * Deletes the moment with the given id.
+     *
+     * @param id the id of the moment to delete
+     * @throws IllegalArgumentException if no moment exists with the given id
+     */
+    public void deleteMoment(Long id) {
+        if (momentRepository.findById(id) == null) {
+            throw new IllegalArgumentException("No existe ningún momento con id " + id);
+        }
+        momentRepository.deleteById(id);
+    }
+
+    /**
      * Returns only the moments tagged with the given emotion.
      *
      * @param emotion the emotion to filter by
@@ -94,19 +107,6 @@ public class DiaryService {
             }
         }
         return toDtos(matchingMoments);
-    }
-
-    /**
-     * Deletes the moment with the given id.
-     *
-     * @param id the id of the moment to delete
-     * @throws IllegalArgumentException if no moment exists with the given id
-     */
-    public void deleteMoment(Long id) {
-        if (momentRepository.findById(id) == null) {
-            throw new IllegalArgumentException("No existe ningún momento con id " + id);
-        }
-        momentRepository.deleteById(id);
     }
 
     /**

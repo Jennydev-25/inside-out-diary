@@ -1,5 +1,6 @@
 package dev.jenny.diary.services;
 
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,19 @@ public class DiaryService {
     public List<MomentDto> getMomentsByEmotion(Emotion emotion) {
         return momentRepository.findAll().stream()
                 .filter(moment -> moment.getEmotion() == emotion)
+                .map(momentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns only the moments that occurred in the given year and month.
+     *
+     * @param yearMonth the year and month to filter by
+     * @return a list with the matching moments, converted to DTOs
+     */
+    public List<MomentDto> getMomentsByMonth(YearMonth yearMonth) {
+        return momentRepository.findAll().stream()
+                .filter(moment -> YearMonth.from(moment.getMomentDate()).equals(yearMonth))
                 .map(momentMapper::toDto)
                 .collect(Collectors.toList());
     }

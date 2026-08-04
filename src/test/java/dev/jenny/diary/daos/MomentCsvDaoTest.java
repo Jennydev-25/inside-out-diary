@@ -50,4 +50,20 @@ class MomentCsvDaoTest {
         assertThat(lines.get(0), is("id,title,description,emotion,momentDate"));
         assertThat(lines.get(1), is("1,Primer dia,Empece el bootcamp,Alegría,2026-07-01"));
     }
+
+    /**
+     * Verifies that a field containing a comma gets wrapped in double
+     * quotes, so the comma isn't mistaken for the column separator
+     * (RFC 4180 escaping rule).
+     */
+    @Test
+    void testWriteWrapsFieldContainingCommaInQuotes() throws IOException {
+        MomentDto moment = new MomentDto(1L, "Café, libro y manta", "Una tarde tranquila", Emotion.ALEGRIA,
+                LocalDate.of(2026, 7, 1));
+
+        dao.write(List.of(moment));
+
+        List<String> lines = Files.readAllLines(tempFile);
+        assertThat(lines.get(1), is("1,\"Café, libro y manta\",Una tarde tranquila,Alegría,2026-07-01"));
+    }
 }

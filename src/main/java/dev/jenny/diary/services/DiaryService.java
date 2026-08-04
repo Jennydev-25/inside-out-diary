@@ -2,8 +2,8 @@ package dev.jenny.diary.services;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dev.jenny.diary.contracts.InterfaceMomentRepository;
 import dev.jenny.diary.dtos.MomentDto;
@@ -45,9 +45,7 @@ public class DiaryService {
      * @return a list with all the moments, converted to DTOs
      */
     public List<MomentDto> getAllMoments() {
-        return momentRepository.findAll().stream()
-                .map(momentMapper::toDto)
-                .collect(Collectors.toList());
+        return toDtos(momentRepository.findAll());
     }
 
     /**
@@ -57,10 +55,13 @@ public class DiaryService {
      * @return a list with the matching moments, converted to DTOs
      */
     public List<MomentDto> getMomentsByEmotion(Emotion emotion) {
-        return momentRepository.findAll().stream()
-                .filter(moment -> moment.getEmotion() == emotion)
-                .map(momentMapper::toDto)
-                .collect(Collectors.toList());
+        List<Moment> matchingMoments = new ArrayList<>();
+        for (Moment moment : momentRepository.findAll()) {
+            if (moment.getEmotion() == emotion) {
+                matchingMoments.add(moment);
+            }
+        }
+        return toDtos(matchingMoments);
     }
 
     /**
@@ -70,10 +71,13 @@ public class DiaryService {
      * @return a list with the matching moments, converted to DTOs
      */
     public List<MomentDto> getMomentsByMonth(YearMonth yearMonth) {
-        return momentRepository.findAll().stream()
-                .filter(moment -> YearMonth.from(moment.getMomentDate()).equals(yearMonth))
-                .map(momentMapper::toDto)
-                .collect(Collectors.toList());
+        List<Moment> matchingMoments = new ArrayList<>();
+        for (Moment moment : momentRepository.findAll()) {
+            if (YearMonth.from(moment.getMomentDate()).equals(yearMonth)) {
+                matchingMoments.add(moment);
+            }
+        }
+        return toDtos(matchingMoments);
     }
 
     /**
@@ -83,10 +87,13 @@ public class DiaryService {
      * @return a list with the matching moments, converted to DTOs
      */
     public List<MomentDto> getMomentsByDate(LocalDate date) {
-        return momentRepository.findAll().stream()
-                .filter(moment -> moment.getMomentDate().equals(date))
-                .map(momentMapper::toDto)
-                .collect(Collectors.toList());
+        List<Moment> matchingMoments = new ArrayList<>();
+        for (Moment moment : momentRepository.findAll()) {
+            if (moment.getMomentDate().equals(date)) {
+                matchingMoments.add(moment);
+            }
+        }
+        return toDtos(matchingMoments);
     }
 
     /**
@@ -96,5 +103,21 @@ public class DiaryService {
      */
     public void deleteMoment(Long id) {
         momentRepository.deleteById(id);
+    }
+
+    /**
+     * Converts a list of Moments into a list of MomentDtos. Shared by
+     * every method that returns moments, to avoid repeating the same
+     * conversion loop.
+     *
+     * @param moments the moments to convert
+     * @return the same moments, converted to DTOs
+     */
+    private List<MomentDto> toDtos(List<Moment> moments) {
+        List<MomentDto> momentDtos = new ArrayList<>();
+        for (Moment moment : moments) {
+            momentDtos.add(momentMapper.toDto(moment));
+        }
+        return momentDtos;
     }
 }

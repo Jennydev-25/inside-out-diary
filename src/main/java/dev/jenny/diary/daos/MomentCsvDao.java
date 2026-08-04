@@ -40,7 +40,8 @@ public class MomentCsvDao implements InterfaceMomentCsvDao {
     }
 
     /**
-     * Converts a single moment into its CSV row.
+     * Converts a single moment into its CSV row, escaping its text
+     * fields where needed.
      *
      * @param moment the moment to convert
      * @return the moment's data as a comma-separated line
@@ -48,9 +49,23 @@ public class MomentCsvDao implements InterfaceMomentCsvDao {
     private String toCsvLine(MomentDto moment) {
         return String.format("%d,%s,%s,%s,%s",
                 moment.id(),
-                moment.title(),
-                moment.description(),
+                escapeField(moment.title()),
+                escapeField(moment.description()),
                 moment.emotion().getDisplayName(),
                 moment.momentDate());
+    }
+
+    /**
+     * Wraps a field in double quotes if it contains a comma, following
+     * the CSV escaping rule from RFC 4180.
+     *
+     * @param field the raw field value
+     * @return the field, quoted if it contains a comma
+     */
+    private String escapeField(String field) {
+        if (field.contains(",")) {
+            return "\"" + field + "\"";
+        }
+        return field;
     }
 }

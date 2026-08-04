@@ -150,6 +150,20 @@ public class DiaryService {
     }
 
     /**
+     * Updates the date of an existing moment.
+     *
+     * @param id         the id of the moment to update
+     * @param momentDate the new date
+     * @return the updated moment as a DTO
+     * @throws IllegalArgumentException if no moment exists with the given id
+     */
+    public MomentDto updateMomentDate(Long id, LocalDate momentDate) {
+        Moment moment = findMomentOrThrow(id);
+        moment.setMomentDate(momentDate);
+        return momentMapper.toDto(moment);
+    }
+
+    /**
      * Converts a list of Moments into a list of MomentDtos. Shared by
      * every method that returns moments, to avoid repeating the same
      * conversion loop.

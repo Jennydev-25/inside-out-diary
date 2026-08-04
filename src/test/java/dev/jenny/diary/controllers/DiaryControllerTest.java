@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import dev.jenny.diary.dtos.MomentDto;
+import dev.jenny.diary.mocks.FakeMomentCsvDao;
 import dev.jenny.diary.mocks.FakeMomentRepository;
 import dev.jenny.diary.models.Emotion;
 import dev.jenny.diary.services.DiaryService;
@@ -37,7 +38,7 @@ class DiaryControllerTest {
 
     @BeforeEach
     void setUp() {
-        DiaryService diaryService = new DiaryService(new FakeMomentRepository());
+        DiaryService diaryService = new DiaryService(new FakeMomentRepository(), new FakeMomentCsvDao());
         diaryController = new DiaryController(diaryService);
     }
 

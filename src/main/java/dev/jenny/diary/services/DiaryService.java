@@ -55,9 +55,7 @@ public class DiaryService {
      * @throws IllegalArgumentException if no moment exists with the given id
      */
     public void deleteMoment(Long id) {
-        if (momentRepository.findById(id) == null) {
-            throw new IllegalArgumentException("No existe ningún momento con id " + id);
-        }
+        findMomentOrThrow(id);
         momentRepository.deleteById(id);
     }
 
@@ -118,10 +116,7 @@ public class DiaryService {
      * @throws IllegalArgumentException if no moment exists with the given id
      */
     public MomentDto updateMomentEmotion(Long id, Emotion emotion) {
-        Moment moment = momentRepository.findById(id);
-        if (moment == null) {
-            throw new IllegalArgumentException("No existe ningún momento con id " + id);
-        }
+        Moment moment = findMomentOrThrow(id);
         moment.setEmotion(emotion);
         return momentMapper.toDto(moment);
     }
@@ -135,11 +130,22 @@ public class DiaryService {
      * @throws IllegalArgumentException if no moment exists with the given id
      */
     public MomentDto updateMomentTitle(Long id, String title) {
-        Moment moment = momentRepository.findById(id);
-        if (moment == null) {
-            throw new IllegalArgumentException("No existe ningún momento con id " + id);
-        }
+        Moment moment = findMomentOrThrow(id);
         moment.setTitle(title);
+        return momentMapper.toDto(moment);
+    }
+
+    /**
+     * Updates the description of an existing moment.
+     *
+     * @param id          the id of the moment to update
+     * @param description the new description
+     * @return the updated moment as a DTO
+     * @throws IllegalArgumentException if no moment exists with the given id
+     */
+    public MomentDto updateMomentDescription(Long id, String description) {
+        Moment moment = findMomentOrThrow(id);
+        moment.setDescription(description);
         return momentMapper.toDto(moment);
     }
 
@@ -157,5 +163,21 @@ public class DiaryService {
             momentDtos.add(momentMapper.toDto(moment));
         }
         return momentDtos;
+    }
+
+    /**
+     * Finds a moment by id, or throws if none exists. Shared by every
+     * method that needs to operate on an existing moment.
+     *
+     * @param id the id to search for
+     * @return the moment with that id
+     * @throws IllegalArgumentException if no moment exists with the given id
+     */
+    private Moment findMomentOrThrow(Long id) {
+        Moment moment = momentRepository.findById(id);
+        if (moment == null) {
+            throw new IllegalArgumentException("No existe ningún momento con id " + id);
+        }
+        return moment;
     }
 }

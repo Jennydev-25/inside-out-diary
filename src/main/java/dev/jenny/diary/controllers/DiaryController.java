@@ -88,4 +88,15 @@ public class DiaryController {
     public MomentDto updateMomentEmotion(Long id, Emotion emotion) {
         return diaryService.updateMomentEmotion(id, emotion);
     }
+
+    /**
+     * Updates the title of an existing moment.
+     *
+     * @param id    the id of the moment to update
+     * @param title the new title
+     * @return the updated moment as a DTO
+     */
+    public MomentDto updateMomentTitle(Long id, String title) {
+        return diaryService.updateMomentTitle(id, title);
+    }
 }

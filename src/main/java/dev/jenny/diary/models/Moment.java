@@ -83,6 +83,17 @@ public class Moment {
         refreshUpdatedAt();
     }
 
+    /**
+     * Replaces this moment's title and refreshes its modification
+     * timestamp.
+     *
+     * @param title the new title
+     */
+    public void setTitle(String title) {
+        this.title = title;
+        refreshUpdatedAt();
+    }
+
     private void setTimestamps() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;

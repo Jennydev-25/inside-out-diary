@@ -41,9 +41,7 @@ class DiaryControllerTest {
      */
     @Test
     void testAddMomentReturnsSavedMomentDtoWithId() {
-        MomentDto momentDto = new MomentDto(null, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-
-        MomentDto saved = diaryController.addMoment(momentDto);
+        MomentDto saved = addStandardMoment();
 
         assertThat(saved.id(), is(notNullValue()));
         assertThat(saved.title(), is(equalTo(MOMENT_TITLE)));
@@ -55,8 +53,7 @@ class DiaryControllerTest {
      */
     @Test
     void testGetAllMomentsReturnsAllSavedMomentsAsDtos() {
-        MomentDto momentDto = new MomentDto(null, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        diaryController.addMoment(momentDto);
+        addStandardMoment();
 
         List<MomentDto> moments = diaryController.getAllMoments();
 
@@ -70,11 +67,19 @@ class DiaryControllerTest {
      */
     @Test
     void testDeleteMomentRemovesExistingMoment() {
-        MomentDto momentDto = new MomentDto(null, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        MomentDto saved = diaryController.addMoment(momentDto);
+        MomentDto saved = addStandardMoment();
 
         diaryController.deleteMoment(saved.id());
 
         assertThat(diaryController.getAllMoments(), hasSize(0));
+    }
+
+    /**
+     * Adds the standard test moment through the controller. Shared by
+     * every test that needs a moment already saved.
+     */
+    private MomentDto addStandardMoment() {
+        MomentDto momentDto = new MomentDto(null, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        return diaryController.addMoment(momentDto);
     }
 }

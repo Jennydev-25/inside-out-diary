@@ -94,6 +94,17 @@ public class Moment {
         refreshUpdatedAt();
     }
 
+    /**
+     * Replaces this moment's description and refreshes its modification
+     * timestamp.
+     *
+     * @param description the new description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+        refreshUpdatedAt();
+    }
+
     private void setTimestamps() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;

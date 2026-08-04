@@ -3,6 +3,7 @@ package dev.jenny.diary.controllers;
 import java.util.List;
 
 import dev.jenny.diary.dtos.MomentDto;
+import dev.jenny.diary.models.Emotion;
 import dev.jenny.diary.services.DiaryService;
 
 /**
@@ -43,5 +44,15 @@ public class DiaryController {
      */
     public void deleteMoment(Long id) {
         diaryService.deleteMoment(id);
+    }
+
+    /**
+     * Returns only the moments tagged with the given emotion.
+     *
+     * @param emotion the emotion to filter by
+     * @return a list with the matching moments, as DTOs
+     */
+    public List<MomentDto> getMomentsByEmotion(Emotion emotion) {
+        return diaryService.getMomentsByEmotion(emotion);
     }
 }

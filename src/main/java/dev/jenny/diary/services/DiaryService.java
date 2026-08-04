@@ -127,6 +127,23 @@ public class DiaryService {
     }
 
     /**
+     * Updates the title of an existing moment.
+     *
+     * @param id    the id of the moment to update
+     * @param title the new title
+     * @return the updated moment as a DTO
+     * @throws IllegalArgumentException if no moment exists with the given id
+     */
+    public MomentDto updateMomentTitle(Long id, String title) {
+        Moment moment = momentRepository.findById(id);
+        if (moment == null) {
+            throw new IllegalArgumentException("No existe ningún momento con id " + id);
+        }
+        moment.setTitle(title);
+        return momentMapper.toDto(moment);
+    }
+
+    /**
      * Converts a list of Moments into a list of MomentDtos. Shared by
      * every method that returns moments, to avoid repeating the same
      * conversion loop.

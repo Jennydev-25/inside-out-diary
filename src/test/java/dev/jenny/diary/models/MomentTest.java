@@ -45,19 +45,15 @@ class MomentTest {
     /**
      * Verifies that setEmotion replaces the emotion, refreshes the
      * modification timestamp, and keeps the creation timestamp unchanged.
-     * A 1ms sleep guarantees the two LocalDateTime.now() calls (constructor
-     * and setEmotion) don't land on the exact same instant.
      */
     @Test
     void testSetEmotionUpdatesEmotionAndRefreshesUpdatedAt() throws InterruptedException {
-        LocalDateTime originalCreatedAt = moment.getCreatedAt();
-        Thread.sleep(1);
+        LocalDateTime originalCreatedAt = captureCreatedAtAndWait();
 
         moment.setEmotion(Emotion.TRISTEZA);
 
         assertThat(moment.getEmotion(), is(equalTo(Emotion.TRISTEZA)));
-        assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
-        assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
+        assertTimestampsRefreshed(originalCreatedAt);
     }
 
     /**
@@ -66,14 +62,12 @@ class MomentTest {
      */
     @Test
     void testSetTitleUpdatesTitleAndRefreshesUpdatedAt() throws InterruptedException {
-        LocalDateTime originalCreatedAt = moment.getCreatedAt();
-        Thread.sleep(1);
+        LocalDateTime originalCreatedAt = captureCreatedAtAndWait();
 
         moment.setTitle("Un día en la playa");
 
         assertThat(moment.getTitle(), is(equalTo("Un día en la playa")));
-        assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
-        assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
+        assertTimestampsRefreshed(originalCreatedAt);
     }
 
     /**
@@ -83,12 +77,35 @@ class MomentTest {
      */
     @Test
     void testSetDescriptionUpdatesDescriptionAndRefreshesUpdatedAt() throws InterruptedException {
-        LocalDateTime originalCreatedAt = moment.getCreatedAt();
-        Thread.sleep(1);
+        LocalDateTime originalCreatedAt = captureCreatedAtAndWait();
 
         moment.setDescription("Un día tranquilo en la playa, escuchando el mar.");
 
         assertThat(moment.getDescription(), is(equalTo("Un día tranquilo en la playa, escuchando el mar.")));
+        assertTimestampsRefreshed(originalCreatedAt);
+    }
+
+    /**
+     * Captures the moment's current creation timestamp and waits 1ms,
+     * guaranteeing that a following LocalDateTime.now() call won't land
+     * on the exact same instant. Shared by every setter test that
+     * checks the modification timestamp gets refreshed.
+     */
+    private LocalDateTime captureCreatedAtAndWait() throws InterruptedException {
+        LocalDateTime originalCreatedAt = moment.getCreatedAt();
+        Thread.sleep(1);
+        return originalCreatedAt;
+    }
+
+    /**
+     * Verifies that the creation timestamp stayed the same while the
+     * modification timestamp moved forward. Shared by every setter
+     * test.
+     *
+     * @param originalCreatedAt the creation timestamp captured before
+     *                          calling the setter
+     */
+    private void assertTimestampsRefreshed(LocalDateTime originalCreatedAt) {
         assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
         assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
     }

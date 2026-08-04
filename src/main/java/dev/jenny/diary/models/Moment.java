@@ -105,6 +105,17 @@ public class Moment {
         refreshUpdatedAt();
     }
 
+    /**
+     * Replaces this moment's date and refreshes its modification
+     * timestamp.
+     *
+     * @param momentDate the new date
+     */
+    public void setMomentDate(LocalDate momentDate) {
+        this.momentDate = momentDate;
+        refreshUpdatedAt();
+    }
+
     private void setTimestamps() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;

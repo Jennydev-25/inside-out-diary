@@ -30,4 +30,15 @@ class AccessServiceTest {
 
         assertThat(granted, is(true));
     }
+
+    /**
+     * Verifies that attemptAccess denies access when the password does
+     * not match the correct one.
+     */
+    @Test
+    void testAttemptAccessDeniesAccessWithIncorrectPassword() {
+        boolean granted = accessService.attemptAccess("contraseña-incorrecta");
+
+        assertThat(granted, is(false));
+    }
 }

@@ -86,10 +86,7 @@ class DiaryControllerTest {
      */
     @Test
     void testGetMomentsByEmotionReturnsOnlyMatchingMoments() {
-        addStandardMoment();
-        diaryController.addMoment(
-                new MomentDto(null, OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION,
-                        OTHER_MOMENT_DATE));
+        addTwoMoments();
 
         List<MomentDto> moments = diaryController.getMomentsByEmotion(Emotion.ALEGRIA);
 
@@ -104,10 +101,7 @@ class DiaryControllerTest {
      */
     @Test
     void testGetMomentsByMonthReturnsOnlyMatchingMoments() {
-        addStandardMoment();
-        diaryController.addMoment(
-                new MomentDto(null, OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION,
-                        OTHER_MOMENT_DATE));
+        addTwoMoments();
 
         List<MomentDto> moments = diaryController.getMomentsByMonth(YearMonth.of(2024, 5));
 
@@ -121,10 +115,7 @@ class DiaryControllerTest {
      */
     @Test
     void testGetMomentsByDateReturnsOnlyMatchingMoments() {
-        addStandardMoment();
-        diaryController.addMoment(
-                new MomentDto(null, OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION,
-                        OTHER_MOMENT_DATE));
+        addTwoMoments();
 
         List<MomentDto> moments = diaryController.getMomentsByDate(MOMENT_DATE);
 
@@ -139,5 +130,16 @@ class DiaryControllerTest {
     private MomentDto addStandardMoment() {
         MomentDto momentDto = new MomentDto(null, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
         return diaryController.addMoment(momentDto);
+    }
+
+    /**
+     * Adds the standard test moment and a second, different one.
+     * Shared by every filtering test.
+     */
+    private void addTwoMoments() {
+        addStandardMoment();
+        diaryController.addMoment(
+                new MomentDto(null, OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION,
+                        OTHER_MOMENT_DATE));
     }
 }

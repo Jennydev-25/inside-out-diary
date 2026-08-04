@@ -1,5 +1,6 @@
 package dev.jenny.diary.controllers;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -65,5 +66,15 @@ public class DiaryController {
      */
     public List<MomentDto> getMomentsByMonth(YearMonth yearMonth) {
         return diaryService.getMomentsByMonth(yearMonth);
+    }
+
+    /**
+     * Returns only the moments that occurred on the exact given date.
+     *
+     * @param date the date to filter by
+     * @return a list with the matching moments, as DTOs
+     */
+    public List<MomentDto> getMomentsByDate(LocalDate date) {
+        return diaryService.getMomentsByDate(date);
     }
 }

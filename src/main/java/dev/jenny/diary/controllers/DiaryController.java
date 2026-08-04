@@ -35,4 +35,13 @@ public class DiaryController {
     public List<MomentDto> getAllMoments() {
         return diaryService.getAllMoments();
     }
+
+    /**
+     * Deletes the moment with the given id.
+     *
+     * @param id the id of the moment to delete
+     */
+    public void deleteMoment(Long id) {
+        diaryService.deleteMoment(id);
+    }
 }

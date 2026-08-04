@@ -86,6 +86,21 @@ class MomentTest {
     }
 
     /**
+     * Verifies that setMomentDate replaces the date, refreshes the
+     * modification timestamp, and keeps the creation timestamp
+     * unchanged.
+     */
+    @Test
+    void testSetMomentDateUpdatesMomentDateAndRefreshesUpdatedAt() throws InterruptedException {
+        LocalDateTime originalCreatedAt = captureCreatedAtAndWait();
+
+        moment.setMomentDate(LocalDate.of(2024, 8, 15));
+
+        assertThat(moment.getMomentDate(), is(equalTo(LocalDate.of(2024, 8, 15))));
+        assertTimestampsRefreshed(originalCreatedAt);
+    }
+
+    /**
      * Captures the moment's current creation timestamp and waits 1ms,
      * guaranteeing that a following LocalDateTime.now() call won't land
      * on the exact same instant. Shared by every setter test that

@@ -124,6 +124,59 @@ class DiaryControllerTest {
     }
 
     /**
+     * Verifies that updateMomentEmotion delegates to the service and
+     * returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentEmotionUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentEmotion(saved.id(), Emotion.TRISTEZA);
+
+        assertThat(updated.emotion(), is(equalTo(Emotion.TRISTEZA)));
+    }
+
+    /**
+     * Verifies that updateMomentTitle delegates to the service and
+     * returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentTitleUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentTitle(saved.id(), "Un día en la playa");
+
+        assertThat(updated.title(), is(equalTo("Un día en la playa")));
+    }
+
+    /**
+     * Verifies that updateMomentDescription delegates to the service
+     * and returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentDescriptionUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentDescription(saved.id(),
+                "Un día tranquilo en la playa, escuchando el mar.");
+
+        assertThat(updated.description(), is(equalTo("Un día tranquilo en la playa, escuchando el mar.")));
+    }
+
+    /**
+     * Verifies that updateMomentDate delegates to the service and
+     * returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentDateUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentDate(saved.id(), LocalDate.of(2024, 8, 15));
+
+        assertThat(updated.momentDate(), is(equalTo(LocalDate.of(2024, 8, 15))));
+    }
+
+    /**
      * Adds the standard test moment through the controller. Shared by
      * every test that needs a moment already saved.
      */

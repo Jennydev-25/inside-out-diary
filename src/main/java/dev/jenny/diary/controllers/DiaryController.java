@@ -77,4 +77,15 @@ public class DiaryController {
     public List<MomentDto> getMomentsByDate(LocalDate date) {
         return diaryService.getMomentsByDate(date);
     }
+
+    /**
+     * Updates the emotion of an existing moment.
+     *
+     * @param id      the id of the moment to update
+     * @param emotion the new emotion
+     * @return the updated moment as a DTO
+     */
+    public MomentDto updateMomentEmotion(Long id, Emotion emotion) {
+        return diaryService.updateMomentEmotion(id, emotion);
+    }
 }

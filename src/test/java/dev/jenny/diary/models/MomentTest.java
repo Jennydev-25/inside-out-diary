@@ -13,9 +13,6 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit tests for the {@link Moment} model.
- */
 class MomentTest {
 
     private static final String MOMENT_DESCRIPTION = "Fui con mis amigas al parque de atracciones y no paramos de reír en toda la tarde. "
@@ -33,11 +30,6 @@ class MomentTest {
                 LocalDate.of(2024, 5, 1));
     }
 
-    /**
-     * Verifies that a newly created Moment stores all the data it was
-     * given, has no id yet (not persisted), and has its creation and
-     * modification timestamps automatically set to the same instant.
-     */
     @Test
     void testMomentIsCreatedWithAllItsAttributes() {
         assertThat(moment, is(notNullValue()));
@@ -53,10 +45,13 @@ class MomentTest {
     /**
      * Verifies that setEmotion replaces the emotion, refreshes the
      * modification timestamp, and keeps the creation timestamp unchanged.
+     * A 1ms sleep guarantees the two LocalDateTime.now() calls (constructor
+     * and setEmotion) don't land on the exact same instant.
      */
     @Test
-    void testSetEmotionUpdatesEmotionAndRefreshesUpdatedAt() {
+    void testSetEmotionUpdatesEmotionAndRefreshesUpdatedAt() throws InterruptedException {
         LocalDateTime originalCreatedAt = moment.getCreatedAt();
+        Thread.sleep(1);
 
         moment.setEmotion(Emotion.TRISTEZA);
 

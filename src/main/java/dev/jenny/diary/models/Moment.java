@@ -72,9 +72,24 @@ public class Moment {
         this.id = id;
     }
 
+    /**
+     * Replaces this moment's emotion and refreshes its modification
+     * timestamp.
+     *
+     * @param emotion the new emotion
+     */
+    public void setEmotion(Emotion emotion) {
+        this.emotion = emotion;
+        refreshUpdatedAt();
+    }
+
     private void setTimestamps() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
+    }
+
+    private void refreshUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

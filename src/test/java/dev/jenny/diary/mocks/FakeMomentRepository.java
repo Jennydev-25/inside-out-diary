@@ -29,14 +29,19 @@ public class FakeMomentRepository implements InterfaceMomentRepository {
 
     @Override
     public Moment findById(Long id) {
-        return moments.stream()
-                .filter(moment -> moment.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        for (Moment moment : moments) {
+            if (moment.getId().equals(id)) {
+                return moment;
+            }
+        }
+        return null;
     }
 
     @Override
     public void deleteById(Long id) {
-        moments.removeIf(moment -> moment.getId().equals(id));
+        Moment momentToRemove = findById(id);
+        if (momentToRemove != null) {
+            moments.remove(momentToRemove);
+        }
     }
 }

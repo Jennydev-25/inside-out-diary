@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import dev.jenny.diary.contracts.InterfaceMomentRepository;
 import dev.jenny.diary.dtos.MomentDto;
 import dev.jenny.diary.mappers.MomentMapper;
+import dev.jenny.diary.models.Emotion;
 import dev.jenny.diary.models.Moment;
 
 /**
@@ -43,6 +44,19 @@ public class DiaryService {
      */
     public List<MomentDto> getAllMoments() {
         return momentRepository.findAll().stream()
+                .map(momentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns only the moments tagged with the given emotion.
+     *
+     * @param emotion the emotion to filter by
+     * @return a list with the matching moments, converted to DTOs
+     */
+    public List<MomentDto> getMomentsByEmotion(Emotion emotion) {
+        return momentRepository.findAll().stream()
+                .filter(moment -> moment.getEmotion() == emotion)
                 .map(momentMapper::toDto)
                 .collect(Collectors.toList());
     }

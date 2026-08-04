@@ -164,6 +164,19 @@ class DiaryControllerTest {
     }
 
     /**
+     * Verifies that updateMomentDate delegates to the service and
+     * returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentDateUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentDate(saved.id(), LocalDate.of(2024, 8, 15));
+
+        assertThat(updated.momentDate(), is(equalTo(LocalDate.of(2024, 8, 15))));
+    }
+
+    /**
      * Adds the standard test moment through the controller. Shared by
      * every test that needs a moment already saved.
      */

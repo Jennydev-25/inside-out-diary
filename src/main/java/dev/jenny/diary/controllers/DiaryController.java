@@ -99,4 +99,15 @@ public class DiaryController {
     public MomentDto updateMomentTitle(Long id, String title) {
         return diaryService.updateMomentTitle(id, title);
     }
+
+    /**
+     * Updates the description of an existing moment.
+     *
+     * @param id          the id of the moment to update
+     * @param description the new description
+     * @return the updated moment as a DTO
+     */
+    public MomentDto updateMomentDescription(Long id, String description) {
+        return diaryService.updateMomentDescription(id, description);
+    }
 }

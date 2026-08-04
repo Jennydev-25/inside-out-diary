@@ -181,6 +181,20 @@ class DiaryServiceTest {
     }
 
     /**
+     * Verifies that updateMomentDescription changes the description of
+     * an existing moment and returns it as an updated DTO.
+     */
+    @Test
+    void testUpdateMomentDescriptionUpdatesExistingMoment() {
+        Moment moment = addStandardMoment();
+
+        MomentDto updated = diaryService.updateMomentDescription(moment.getId(),
+                "Un día tranquilo en la playa, escuchando el mar.");
+
+        assertThat(updated.description(), is(equalTo("Un día tranquilo en la playa, escuchando el mar.")));
+    }
+
+    /**
      * Saves the standard test moment directly through the fake
      * repository. Shared by every test that needs a moment already
      * saved.

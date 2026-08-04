@@ -108,4 +108,22 @@ class DiaryServiceTest {
         assertThat(moments, hasSize(1));
         assertThat(moments.get(0).momentDate(), is(equalTo(MOMENT_DATE)));
     }
+
+    /**
+     * Verifies that getMomentsByDate returns only the moments that
+     * occurred on the exact given date.
+     */
+    @Test
+    void testGetMomentsByDateReturnsOnlyMatchingMoments() {
+        Moment mayMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        Moment juneMoment = new Moment(
+                OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE);
+        fakeMomentRepository.save(mayMoment);
+        fakeMomentRepository.save(juneMoment);
+
+        List<MomentDto> moments = diaryService.getMomentsByDate(MOMENT_DATE);
+
+        assertThat(moments, hasSize(1));
+        assertThat(moments.get(0).momentDate(), is(equalTo(MOMENT_DATE)));
+    }
 }

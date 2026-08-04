@@ -59,4 +59,20 @@ class MomentTest {
         assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
         assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
     }
+
+    /**
+     * Verifies that setTitle replaces the title, refreshes the
+     * modification timestamp, and keeps the creation timestamp unchanged.
+     */
+    @Test
+    void testSetTitleUpdatesTitleAndRefreshesUpdatedAt() throws InterruptedException {
+        LocalDateTime originalCreatedAt = moment.getCreatedAt();
+        Thread.sleep(1);
+
+        moment.setTitle("Un día en la playa");
+
+        assertThat(moment.getTitle(), is(equalTo("Un día en la playa")));
+        assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
+        assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
+    }
 }

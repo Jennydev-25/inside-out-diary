@@ -75,6 +75,28 @@ class DiaryServiceTest {
     }
 
     /**
+     * Verifies that deleteMoment removes an existing moment.
+     */
+    @Test
+    void testDeleteMomentRemovesExistingMoment() {
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        fakeMomentRepository.save(moment);
+
+        diaryService.deleteMoment(moment.getId());
+
+        assertThat(diaryService.getAllMoments(), hasSize(0));
+    }
+
+    /**
+     * Verifies that deleteMoment throws IllegalArgumentException when
+     * no moment exists with the given id.
+     */
+    @Test
+    void testDeleteMomentWithNonExistingIdThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> diaryService.deleteMoment(99L));
+    }
+
+    /**
      * Verifies that getMomentsByEmotion returns only the moments
      * tagged with the given emotion.
      */
@@ -126,27 +148,5 @@ class DiaryServiceTest {
 
         assertThat(moments, hasSize(1));
         assertThat(moments.get(0).momentDate(), is(equalTo(MOMENT_DATE)));
-    }
-
-    /**
-     * Verifies that deleteMoment removes an existing moment.
-     */
-    @Test
-    void testDeleteMomentRemovesExistingMoment() {
-        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        fakeMomentRepository.save(moment);
-
-        diaryService.deleteMoment(moment.getId());
-
-        assertThat(diaryService.getAllMoments(), hasSize(0));
-    }
-
-    /**
-     * Verifies that deleteMoment throws IllegalArgumentException when
-     * no moment exists with the given id.
-     */
-    @Test
-    void testDeleteMomentWithNonExistingIdThrowsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> diaryService.deleteMoment(99L));
     }
 }

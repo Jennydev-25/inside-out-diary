@@ -41,4 +41,17 @@ class AccessServiceTest {
 
         assertThat(granted, is(false));
     }
+
+    /**
+     * Verifies that hasAttemptsRemaining becomes false after exhausting
+     * every allowed attempt with an incorrect password.
+     */
+    @Test
+    void testHasAttemptsRemainingIsFalseAfterMaxFailedAttempts() {
+        accessService.attemptAccess("intento-fallido-1");
+        accessService.attemptAccess("intento-fallido-2");
+        accessService.attemptAccess("intento-fallido-3");
+
+        assertThat(accessService.hasAttemptsRemaining(), is(false));
+    }
 }

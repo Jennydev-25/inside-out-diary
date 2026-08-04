@@ -27,6 +27,11 @@ class DiaryControllerTest {
     private static final Emotion MOMENT_EMOTION = Emotion.ALEGRIA;
     private static final LocalDate MOMENT_DATE = LocalDate.of(2024, 5, 1);
 
+    private static final String OTHER_MOMENT_TITLE = "Un día lluvioso";
+    private static final String OTHER_MOMENT_DESCRIPTION = "Me quedé en casa todo el día";
+    private static final Emotion OTHER_MOMENT_EMOTION = Emotion.TRISTEZA;
+    private static final LocalDate OTHER_MOMENT_DATE = LocalDate.of(2024, 6, 10);
+
     private DiaryController diaryController;
 
     @BeforeEach
@@ -72,6 +77,23 @@ class DiaryControllerTest {
         diaryController.deleteMoment(saved.id());
 
         assertThat(diaryController.getAllMoments(), hasSize(0));
+    }
+
+    /**
+     * Verifies that getMomentsByEmotion delegates to the service and
+     * returns only the moments tagged with the given emotion.
+     */
+    @Test
+    void testGetMomentsByEmotionReturnsOnlyMatchingMoments() {
+        addStandardMoment();
+        diaryController.addMoment(
+                new MomentDto(null, OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION,
+                        OTHER_MOMENT_DATE));
+
+        List<MomentDto> moments = diaryController.getMomentsByEmotion(Emotion.ALEGRIA);
+
+        assertThat(moments, hasSize(1));
+        assertThat(moments.get(0).emotion(), is(equalTo(Emotion.ALEGRIA)));
     }
 
     /**

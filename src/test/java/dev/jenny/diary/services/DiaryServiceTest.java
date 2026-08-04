@@ -66,4 +66,25 @@ class DiaryServiceTest {
         assertThat(moments, hasSize(1));
         assertThat(moments.get(0).title(), is(equalTo(MOMENT_TITLE)));
     }
+
+    /**
+     * Verifies that getMomentsByEmotion returns only the moments
+     * tagged with the given emotion.
+     */
+    @Test
+    void testGetMomentsByEmotionReturnsOnlyMatchingMoments() {
+        Moment alegriaMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        Moment tristezaMoment = new Moment(
+                "Un día lluvioso",
+                "Me quedé en casa todo el día",
+                Emotion.TRISTEZA,
+                LocalDate.of(2024, 6, 10));
+        fakeMomentRepository.save(alegriaMoment);
+        fakeMomentRepository.save(tristezaMoment);
+
+        List<MomentDto> moments = diaryService.getMomentsByEmotion(Emotion.ALEGRIA);
+
+        assertThat(moments, hasSize(1));
+        assertThat(moments.get(0).emotion(), is(equalTo(Emotion.ALEGRIA)));
+    }
 }

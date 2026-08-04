@@ -102,11 +102,7 @@ class DiaryServiceTest {
      */
     @Test
     void testGetMomentsByEmotionReturnsOnlyMatchingMoments() {
-        Moment alegriaMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        Moment tristezaMoment = new Moment(
-                OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE);
-        fakeMomentRepository.save(alegriaMoment);
-        fakeMomentRepository.save(tristezaMoment);
+        saveTwoMoments();
 
         List<MomentDto> moments = diaryService.getMomentsByEmotion(Emotion.ALEGRIA);
 
@@ -120,11 +116,7 @@ class DiaryServiceTest {
      */
     @Test
     void testGetMomentsByMonthReturnsOnlyMatchingMoments() {
-        Moment mayMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        Moment juneMoment = new Moment(
-                OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE);
-        fakeMomentRepository.save(mayMoment);
-        fakeMomentRepository.save(juneMoment);
+        saveTwoMoments();
 
         List<MomentDto> moments = diaryService.getMomentsByMonth(YearMonth.of(2024, 5));
 
@@ -138,15 +130,21 @@ class DiaryServiceTest {
      */
     @Test
     void testGetMomentsByDateReturnsOnlyMatchingMoments() {
-        Moment mayMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        Moment juneMoment = new Moment(
-                OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE);
-        fakeMomentRepository.save(mayMoment);
-        fakeMomentRepository.save(juneMoment);
+        saveTwoMoments();
 
         List<MomentDto> moments = diaryService.getMomentsByDate(MOMENT_DATE);
 
         assertThat(moments, hasSize(1));
         assertThat(moments.get(0).momentDate(), is(equalTo(MOMENT_DATE)));
+    }
+
+    /**
+     * Saves the two standard test moments (one matching, one not) into
+     * the fake repository. Shared by every filtering test.
+     */
+    private void saveTwoMoments() {
+        fakeMomentRepository.save(new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE));
+        fakeMomentRepository.save(
+                new Moment(OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE));
     }
 }

@@ -172,6 +172,15 @@ class DiaryServiceTest {
     }
 
     /**
+     * Verifies that updateMomentTitle throws IllegalArgumentException
+     * when no moment exists with the given id.
+     */
+    @Test
+    void testUpdateMomentTitleWithNonExistingIdThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> diaryService.updateMomentTitle(99L, "Un día en la playa"));
+    }
+
+    /**
      * Saves the standard test moment directly through the fake
      * repository. Shared by every test that needs a moment already
      * saved.

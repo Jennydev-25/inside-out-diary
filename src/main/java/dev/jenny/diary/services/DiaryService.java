@@ -110,6 +110,23 @@ public class DiaryService {
     }
 
     /**
+     * Updates the emotion of an existing moment.
+     *
+     * @param id      the id of the moment to update
+     * @param emotion the new emotion
+     * @return the updated moment as a DTO
+     * @throws IllegalArgumentException if no moment exists with the given id
+     */
+    public MomentDto updateMomentEmotion(Long id, Emotion emotion) {
+        Moment moment = momentRepository.findById(id);
+        if (moment == null) {
+            throw new IllegalArgumentException("No existe ningún momento con id " + id);
+        }
+        moment.setEmotion(emotion);
+        return momentMapper.toDto(moment);
+    }
+
+    /**
      * Converts a list of Moments into a list of MomentDtos. Shared by
      * every method that returns moments, to avoid repeating the same
      * conversion loop.

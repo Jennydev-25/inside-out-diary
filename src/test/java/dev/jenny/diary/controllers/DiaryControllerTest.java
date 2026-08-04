@@ -150,6 +150,20 @@ class DiaryControllerTest {
     }
 
     /**
+     * Verifies that updateMomentDescription delegates to the service
+     * and returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentDescriptionUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentDescription(saved.id(),
+                "Un día tranquilo en la playa, escuchando el mar.");
+
+        assertThat(updated.description(), is(equalTo("Un día tranquilo en la playa, escuchando el mar.")));
+    }
+
+    /**
      * Adds the standard test moment through the controller. Shared by
      * every test that needs a moment already saved.
      */

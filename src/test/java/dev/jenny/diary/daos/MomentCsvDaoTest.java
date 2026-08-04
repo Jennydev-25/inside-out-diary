@@ -66,4 +66,20 @@ class MomentCsvDaoTest {
         List<String> lines = Files.readAllLines(tempFile);
         assertThat(lines.get(1), is("1,\"Café, libro y manta\",Una tarde tranquila,Alegría,2026-07-01"));
     }
+
+    /**
+     * Verifies that a field containing a double quote gets wrapped in
+     * double quotes, with each literal quote doubled (RFC 4180
+     * escaping rule).
+     */
+    @Test
+    void testWriteEscapesFieldContainingDoubleQuote() throws IOException {
+        MomentDto moment = new MomentDto(1L, "Un dia especial", "Dijo \"hola\" y se fue", Emotion.ALEGRIA,
+                LocalDate.of(2026, 7, 1));
+
+        dao.write(List.of(moment));
+
+        List<String> lines = Files.readAllLines(tempFile);
+        assertThat(lines.get(1), is("1,Un dia especial,\"Dijo \"\"hola\"\" y se fue\",Alegría,2026-07-01"));
+    }
 }

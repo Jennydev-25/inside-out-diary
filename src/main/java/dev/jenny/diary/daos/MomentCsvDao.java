@@ -56,15 +56,18 @@ public class MomentCsvDao implements InterfaceMomentCsvDao {
     }
 
     /**
-     * Wraps a field in double quotes if it contains a comma, following
-     * the CSV escaping rule from RFC 4180.
+     * Wraps a field in double quotes if it contains a comma or a
+     * double quote, following the CSV escaping rule from RFC 4180.
      *
      * @param field the raw field value
-     * @return the field, quoted if it contains a comma
+     * @return the field, escaped if it needs quoting
      */
     private String escapeField(String field) {
         if (field.contains(",")) {
             return "\"" + field + "\"";
+        }
+        if (field.contains("\"")) {
+            return "\"" + field.replace("\"", "\"\"") + "\"";
         }
         return field;
     }

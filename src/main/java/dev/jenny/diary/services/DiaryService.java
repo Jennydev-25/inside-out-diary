@@ -88,4 +88,13 @@ public class DiaryService {
                 .map(momentMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Deletes the moment with the given id.
+     *
+     * @param id the id of the moment to delete
+     */
+    public void deleteMoment(Long id) {
+        momentRepository.deleteById(id);
+    }
 }

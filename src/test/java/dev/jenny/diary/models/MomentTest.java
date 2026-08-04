@@ -5,8 +5,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,5 +48,20 @@ class MomentTest {
         assertThat(moment.getMomentDate(), is(equalTo(LocalDate.of(2024, 5, 1))));
         assertThat(moment.getCreatedAt(), is(notNullValue()));
         assertThat(moment.getUpdatedAt(), is(equalTo(moment.getCreatedAt())));
+    }
+
+    /**
+     * Verifies that setEmotion replaces the emotion, refreshes the
+     * modification timestamp, and keeps the creation timestamp unchanged.
+     */
+    @Test
+    void testSetEmotionUpdatesEmotionAndRefreshesUpdatedAt() {
+        LocalDateTime originalCreatedAt = moment.getCreatedAt();
+
+        moment.setEmotion(Emotion.TRISTEZA);
+
+        assertThat(moment.getEmotion(), is(equalTo(Emotion.TRISTEZA)));
+        assertThat(moment.getCreatedAt(), is(equalTo(originalCreatedAt)));
+        assertTrue(moment.getUpdatedAt().isAfter(originalCreatedAt));
     }
 }

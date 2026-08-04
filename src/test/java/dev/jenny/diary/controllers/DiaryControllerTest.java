@@ -124,6 +124,19 @@ class DiaryControllerTest {
     }
 
     /**
+     * Verifies that updateMomentEmotion delegates to the service and
+     * returns the updated moment as a DTO.
+     */
+    @Test
+    void testUpdateMomentEmotionUpdatesExistingMoment() {
+        MomentDto saved = addStandardMoment();
+
+        MomentDto updated = diaryController.updateMomentEmotion(saved.id(), Emotion.TRISTEZA);
+
+        assertThat(updated.emotion(), is(equalTo(Emotion.TRISTEZA)));
+    }
+
+    /**
      * Adds the standard test moment through the controller. Shared by
      * every test that needs a moment already saved.
      */

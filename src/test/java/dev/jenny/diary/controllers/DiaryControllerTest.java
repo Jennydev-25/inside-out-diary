@@ -63,4 +63,18 @@ class DiaryControllerTest {
         assertThat(moments, hasSize(1));
         assertThat(moments.get(0).title(), is(equalTo(MOMENT_TITLE)));
     }
+
+    /**
+     * Verifies that deleteMoment delegates to the service and removes
+     * an existing moment.
+     */
+    @Test
+    void testDeleteMomentRemovesExistingMoment() {
+        MomentDto momentDto = new MomentDto(null, MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        MomentDto saved = diaryController.addMoment(momentDto);
+
+        diaryController.deleteMoment(saved.id());
+
+        assertThat(diaryController.getAllMoments(), hasSize(0));
+    }
 }

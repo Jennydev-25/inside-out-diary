@@ -1,6 +1,7 @@
 package dev.jenny.diary.daos;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
@@ -81,5 +82,22 @@ class MomentCsvDaoTest {
 
         List<String> lines = Files.readAllLines(tempFile);
         assertThat(lines.get(1), is("1,Un dia especial,\"Dijo \"\"hola\"\" y se fue\",Alegría,2026-07-01"));
+    }
+
+    /**
+     * Verifies that a field containing a line break gets wrapped in
+     * double quotes (RFC 4180 escaping rule). Reads the whole file as
+     * a single String instead of by lines, since readAllLines would
+     * incorrectly split the quoted line break into two entries.
+     */
+    @Test
+    void testWriteWrapsFieldContainingLineBreakInQuotes() throws IOException {
+        MomentDto moment = new MomentDto(1L, "Un dia largo", "Primera linea\nSegunda linea", Emotion.ALEGRIA,
+                LocalDate.of(2026, 7, 1));
+
+        dao.write(List.of(moment));
+
+        String content = Files.readString(tempFile);
+        assertThat(content, containsString("1,Un dia largo,\"Primera linea\nSegunda linea\",Alegría,2026-07-01"));
     }
 }

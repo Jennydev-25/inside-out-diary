@@ -121,4 +121,11 @@ public class DiaryController {
     public MomentDto updateMomentDate(Long id, LocalDate momentDate) {
         return diaryService.updateMomentDate(id, momentDate);
     }
+
+    /**
+     * Exports every stored moment to a CSV file.
+     */
+    public void exportMoments() {
+        diaryService.exportMoments();
+    }
 }

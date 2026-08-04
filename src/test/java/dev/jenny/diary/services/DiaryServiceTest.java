@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import dev.jenny.diary.dtos.MomentDto;
+import dev.jenny.diary.mocks.FakeMomentCsvDao;
 import dev.jenny.diary.mocks.FakeMomentRepository;
 import dev.jenny.diary.models.Emotion;
 import dev.jenny.diary.models.Moment;
@@ -35,12 +36,14 @@ class DiaryServiceTest {
     private static final LocalDate OTHER_MOMENT_DATE = LocalDate.of(2024, 6, 10);
 
     private FakeMomentRepository fakeMomentRepository;
+    private FakeMomentCsvDao fakeMomentCsvDao;
     private DiaryService diaryService;
 
     @BeforeEach
     void setUp() {
         fakeMomentRepository = new FakeMomentRepository();
-        diaryService = new DiaryService(fakeMomentRepository);
+        fakeMomentCsvDao = new FakeMomentCsvDao();
+        diaryService = new DiaryService(fakeMomentRepository, fakeMomentCsvDao);
     }
 
     /**
@@ -205,6 +208,19 @@ class DiaryServiceTest {
         MomentDto updated = diaryService.updateMomentDate(moment.getId(), LocalDate.of(2024, 8, 15));
 
         assertThat(updated.momentDate(), is(equalTo(LocalDate.of(2024, 8, 15))));
+    }
+
+    /**
+     * Verifies that exportMoments passes every saved moment to the
+     * CSV DAO as DTOs.
+     */
+    @Test
+    void testExportMomentsPassesAllMomentsToTheCsvDao() {
+        saveTwoMoments();
+
+        diaryService.exportMoments();
+
+        assertThat(fakeMomentCsvDao.getWrittenMoments(), hasSize(2));
     }
 
     /**

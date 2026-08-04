@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.jenny.diary.contracts.InterfaceMomentCsvDao;
 import dev.jenny.diary.contracts.InterfaceMomentRepository;
 import dev.jenny.diary.dtos.MomentDto;
 import dev.jenny.diary.mappers.MomentMapper;
@@ -19,10 +20,12 @@ import dev.jenny.diary.models.Moment;
 public class DiaryService {
 
     private final InterfaceMomentRepository momentRepository;
+    private final InterfaceMomentCsvDao momentCsvDao;
     private final MomentMapper momentMapper;
 
-    public DiaryService(InterfaceMomentRepository momentRepository) {
+    public DiaryService(InterfaceMomentRepository momentRepository, InterfaceMomentCsvDao momentCsvDao) {
         this.momentRepository = momentRepository;
+        this.momentCsvDao = momentCsvDao;
         this.momentMapper = new MomentMapper();
     }
 
@@ -161,6 +164,13 @@ public class DiaryService {
         Moment moment = findMomentOrThrow(id);
         moment.setMomentDate(momentDate);
         return momentMapper.toDto(moment);
+    }
+
+    /**
+     * Exports every stored moment to a CSV file through the CSV DAO.
+     */
+    public void exportMoments() {
+        momentCsvDao.write(getAllMoments());
     }
 
     /**

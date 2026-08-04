@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -138,5 +139,14 @@ class DiaryServiceTest {
         diaryService.deleteMoment(moment.getId());
 
         assertThat(diaryService.getAllMoments(), hasSize(0));
+    }
+
+    /**
+     * Verifies that deleteMoment throws IllegalArgumentException when
+     * no moment exists with the given id.
+     */
+    @Test
+    void testDeleteMomentWithNonExistingIdThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> diaryService.deleteMoment(99L));
     }
 }

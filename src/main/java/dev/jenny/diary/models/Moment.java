@@ -72,9 +72,57 @@ public class Moment {
         this.id = id;
     }
 
+    /**
+     * Replaces this moment's emotion and refreshes its modification
+     * timestamp.
+     *
+     * @param emotion the new emotion
+     */
+    public void setEmotion(Emotion emotion) {
+        this.emotion = emotion;
+        refreshUpdatedAt();
+    }
+
+    /**
+     * Replaces this moment's title and refreshes its modification
+     * timestamp.
+     *
+     * @param title the new title
+     */
+    public void setTitle(String title) {
+        this.title = title;
+        refreshUpdatedAt();
+    }
+
+    /**
+     * Replaces this moment's description and refreshes its modification
+     * timestamp.
+     *
+     * @param description the new description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+        refreshUpdatedAt();
+    }
+
+    /**
+     * Replaces this moment's date and refreshes its modification
+     * timestamp.
+     *
+     * @param momentDate the new date
+     */
+    public void setMomentDate(LocalDate momentDate) {
+        this.momentDate = momentDate;
+        refreshUpdatedAt();
+    }
+
     private void setTimestamps() {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
+    }
+
+    private void refreshUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

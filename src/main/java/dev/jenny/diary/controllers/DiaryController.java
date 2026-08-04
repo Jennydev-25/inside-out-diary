@@ -1,5 +1,6 @@
 package dev.jenny.diary.controllers;
 
+import java.time.YearMonth;
 import java.util.List;
 
 import dev.jenny.diary.dtos.MomentDto;
@@ -54,5 +55,15 @@ public class DiaryController {
      */
     public List<MomentDto> getMomentsByEmotion(Emotion emotion) {
         return diaryService.getMomentsByEmotion(emotion);
+    }
+
+    /**
+     * Returns only the moments that occurred in the given year and month.
+     *
+     * @param yearMonth the year and month to filter by
+     * @return a list with the matching moments, as DTOs
+     */
+    public List<MomentDto> getMomentsByMonth(YearMonth yearMonth) {
+        return diaryService.getMomentsByMonth(yearMonth);
     }
 }

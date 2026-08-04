@@ -28,6 +28,11 @@ class DiaryServiceTest {
     private static final Emotion MOMENT_EMOTION = Emotion.ALEGRIA;
     private static final LocalDate MOMENT_DATE = LocalDate.of(2024, 5, 1);
 
+    private static final String OTHER_MOMENT_TITLE = "Un día lluvioso";
+    private static final String OTHER_MOMENT_DESCRIPTION = "Me quedé en casa todo el día";
+    private static final Emotion OTHER_MOMENT_EMOTION = Emotion.TRISTEZA;
+    private static final LocalDate OTHER_MOMENT_DATE = LocalDate.of(2024, 6, 10);
+
     private FakeMomentRepository fakeMomentRepository;
     private DiaryService diaryService;
 
@@ -76,10 +81,7 @@ class DiaryServiceTest {
     void testGetMomentsByEmotionReturnsOnlyMatchingMoments() {
         Moment alegriaMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
         Moment tristezaMoment = new Moment(
-                "Un día lluvioso",
-                "Me quedé en casa todo el día",
-                Emotion.TRISTEZA,
-                LocalDate.of(2024, 6, 10));
+                OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE);
         fakeMomentRepository.save(alegriaMoment);
         fakeMomentRepository.save(tristezaMoment);
 
@@ -97,10 +99,7 @@ class DiaryServiceTest {
     void testGetMomentsByMonthReturnsOnlyMatchingMoments() {
         Moment mayMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
         Moment juneMoment = new Moment(
-                "Un día lluvioso",
-                "Me quedé en casa todo el día",
-                Emotion.TRISTEZA,
-                LocalDate.of(2024, 6, 10));
+                OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE);
         fakeMomentRepository.save(mayMoment);
         fakeMomentRepository.save(juneMoment);
 

@@ -116,6 +116,23 @@ class DiaryControllerTest {
     }
 
     /**
+     * Verifies that getMomentsByDate delegates to the service and
+     * returns only the moments that occurred on the exact given date.
+     */
+    @Test
+    void testGetMomentsByDateReturnsOnlyMatchingMoments() {
+        addStandardMoment();
+        diaryController.addMoment(
+                new MomentDto(null, OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION,
+                        OTHER_MOMENT_DATE));
+
+        List<MomentDto> moments = diaryController.getMomentsByDate(MOMENT_DATE);
+
+        assertThat(moments, hasSize(1));
+        assertThat(moments.get(0).momentDate(), is(equalTo(MOMENT_DATE)));
+    }
+
+    /**
      * Adds the standard test moment through the controller. Shared by
      * every test that needs a moment already saved.
      */

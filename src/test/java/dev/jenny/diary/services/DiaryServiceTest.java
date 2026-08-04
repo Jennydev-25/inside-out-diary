@@ -139,6 +139,29 @@ class DiaryServiceTest {
     }
 
     /**
+     * Verifies that updateMomentEmotion changes the emotion of an
+     * existing moment and returns it as an updated DTO.
+     */
+    @Test
+    void testUpdateMomentEmotionUpdatesExistingMoment() {
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        fakeMomentRepository.save(moment);
+
+        MomentDto updated = diaryService.updateMomentEmotion(moment.getId(), Emotion.TRISTEZA);
+
+        assertThat(updated.emotion(), is(equalTo(Emotion.TRISTEZA)));
+    }
+
+    /**
+     * Verifies that updateMomentEmotion throws IllegalArgumentException
+     * when no moment exists with the given id.
+     */
+    @Test
+    void testUpdateMomentEmotionWithNonExistingIdThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> diaryService.updateMomentEmotion(99L, Emotion.TRISTEZA));
+    }
+
+    /**
      * Saves the two standard test moments (one matching, one not) into
      * the fake repository. Shared by every filtering test.
      */

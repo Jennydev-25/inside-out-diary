@@ -195,6 +195,19 @@ class DiaryServiceTest {
     }
 
     /**
+     * Verifies that updateMomentDate changes the date of an existing
+     * moment and returns it as an updated DTO.
+     */
+    @Test
+    void testUpdateMomentDateUpdatesExistingMoment() {
+        Moment moment = addStandardMoment();
+
+        MomentDto updated = diaryService.updateMomentDate(moment.getId(), LocalDate.of(2024, 8, 15));
+
+        assertThat(updated.momentDate(), is(equalTo(LocalDate.of(2024, 8, 15))));
+    }
+
+    /**
      * Saves the standard test moment directly through the fake
      * repository. Shared by every test that needs a moment already
      * saved.

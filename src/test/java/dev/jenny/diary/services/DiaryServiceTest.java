@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -86,5 +87,26 @@ class DiaryServiceTest {
 
         assertThat(moments, hasSize(1));
         assertThat(moments.get(0).emotion(), is(equalTo(Emotion.ALEGRIA)));
+    }
+
+    /**
+     * Verifies that getMomentsByMonth returns only the moments that
+     * occurred in the given year and month.
+     */
+    @Test
+    void testGetMomentsByMonthReturnsOnlyMatchingMoments() {
+        Moment mayMoment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        Moment juneMoment = new Moment(
+                "Un día lluvioso",
+                "Me quedé en casa todo el día",
+                Emotion.TRISTEZA,
+                LocalDate.of(2024, 6, 10));
+        fakeMomentRepository.save(mayMoment);
+        fakeMomentRepository.save(juneMoment);
+
+        List<MomentDto> moments = diaryService.getMomentsByMonth(YearMonth.of(2024, 5));
+
+        assertThat(moments, hasSize(1));
+        assertThat(moments.get(0).momentDate(), is(equalTo(MOMENT_DATE)));
     }
 }

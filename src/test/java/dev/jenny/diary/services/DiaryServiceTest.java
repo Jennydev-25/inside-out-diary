@@ -65,8 +65,7 @@ class DiaryServiceTest {
      */
     @Test
     void testGetAllMomentsReturnsAllSavedMomentsAsDtos() {
-        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        fakeMomentRepository.save(moment);
+        addStandardMoment();
 
         List<MomentDto> moments = diaryService.getAllMoments();
 
@@ -79,8 +78,7 @@ class DiaryServiceTest {
      */
     @Test
     void testDeleteMomentRemovesExistingMoment() {
-        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        fakeMomentRepository.save(moment);
+        Moment moment = addStandardMoment();
 
         diaryService.deleteMoment(moment.getId());
 
@@ -144,8 +142,7 @@ class DiaryServiceTest {
      */
     @Test
     void testUpdateMomentEmotionUpdatesExistingMoment() {
-        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
-        fakeMomentRepository.save(moment);
+        Moment moment = addStandardMoment();
 
         MomentDto updated = diaryService.updateMomentEmotion(moment.getId(), Emotion.TRISTEZA);
 
@@ -162,11 +159,22 @@ class DiaryServiceTest {
     }
 
     /**
-     * Saves the two standard test moments (one matching, one not) into
-     * the fake repository. Shared by every filtering test.
+     * Saves the standard test moment directly through the fake
+     * repository. Shared by every test that needs a moment already
+     * saved.
+     */
+    private Moment addStandardMoment() {
+        Moment moment = new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE);
+        fakeMomentRepository.save(moment);
+        return moment;
+    }
+
+    /**
+     * Saves the standard test moment and a second, different one.
+     * Shared by every filtering test.
      */
     private void saveTwoMoments() {
-        fakeMomentRepository.save(new Moment(MOMENT_TITLE, MOMENT_DESCRIPTION, MOMENT_EMOTION, MOMENT_DATE));
+        addStandardMoment();
         fakeMomentRepository.save(
                 new Moment(OTHER_MOMENT_TITLE, OTHER_MOMENT_DESCRIPTION, OTHER_MOMENT_EMOTION, OTHER_MOMENT_DATE));
     }

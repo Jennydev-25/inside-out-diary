@@ -1,5 +1,6 @@
 package dev.jenny.diary.services;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,6 +72,19 @@ public class DiaryService {
     public List<MomentDto> getMomentsByMonth(YearMonth yearMonth) {
         return momentRepository.findAll().stream()
                 .filter(moment -> YearMonth.from(moment.getMomentDate()).equals(yearMonth))
+                .map(momentMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns only the moments that occurred on the exact given date.
+     *
+     * @param date the date to filter by
+     * @return a list with the matching moments, converted to DTOs
+     */
+    public List<MomentDto> getMomentsByDate(LocalDate date) {
+        return momentRepository.findAll().stream()
+                .filter(moment -> moment.getMomentDate().equals(date))
                 .map(momentMapper::toDto)
                 .collect(Collectors.toList());
     }

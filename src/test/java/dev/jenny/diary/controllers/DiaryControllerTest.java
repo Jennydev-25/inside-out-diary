@@ -35,10 +35,12 @@ class DiaryControllerTest {
     private static final LocalDate OTHER_MOMENT_DATE = LocalDate.of(2024, 6, 10);
 
     private DiaryController diaryController;
+    private FakeMomentCsvDao fakeMomentCsvDao;
 
     @BeforeEach
     void setUp() {
-        DiaryService diaryService = new DiaryService(new FakeMomentRepository(), new FakeMomentCsvDao());
+        fakeMomentCsvDao = new FakeMomentCsvDao();
+        DiaryService diaryService = new DiaryService(new FakeMomentRepository(), fakeMomentCsvDao);
         diaryController = new DiaryController(diaryService);
     }
 
@@ -175,6 +177,19 @@ class DiaryControllerTest {
         MomentDto updated = diaryController.updateMomentDate(saved.id(), LocalDate.of(2024, 8, 15));
 
         assertThat(updated.momentDate(), is(equalTo(LocalDate.of(2024, 8, 15))));
+    }
+
+    /**
+     * Verifies that exportMoments delegates to the service and passes
+     * every saved moment to the CSV DAO.
+     */
+    @Test
+    void testExportMomentsPassesAllMomentsToTheCsvDao() {
+        addTwoMoments();
+
+        diaryController.exportMoments();
+
+        assertThat(fakeMomentCsvDao.getWrittenMoments(), hasSize(2));
     }
 
     /**

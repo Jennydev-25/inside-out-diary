@@ -54,4 +54,19 @@ class AccessServiceTest {
 
         assertThat(accessService.hasAttemptsRemaining(), is(false));
     }
+
+    /**
+     * Verifies that attemptAccess denies access, even with the correct
+     * password, once every attempt has been exhausted.
+     */
+    @Test
+    void testAttemptAccessDeniesAccessOnceAttemptsAreExhausted() {
+        accessService.attemptAccess("intento-fallido-1");
+        accessService.attemptAccess("intento-fallido-2");
+        accessService.attemptAccess("intento-fallido-3");
+
+        boolean granted = accessService.attemptAccess(CORRECT_PASSWORD);
+
+        assertThat(granted, is(false));
+    }
 }

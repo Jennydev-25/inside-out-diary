@@ -1,6 +1,7 @@
 package dev.jenny.diary.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -68,5 +69,16 @@ class AccessServiceTest {
         boolean granted = accessService.attemptAccess(CORRECT_PASSWORD);
 
         assertThat(granted, is(false));
+    }
+
+    /**
+     * Verifies that getMaxAttempts returns the configured maximum number
+     * of attempts allowed before access is permanently denied.
+     */
+    @Test
+    void testGetMaxAttemptsReturnsConfiguredMaximum() {
+        int maxAttempts = accessService.getMaxAttempts();
+
+        assertThat(maxAttempts, is(equalTo(3)));
     }
 }

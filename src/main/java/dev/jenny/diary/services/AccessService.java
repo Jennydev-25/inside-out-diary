@@ -17,13 +17,17 @@ public class AccessService {
     }
 
     /**
-     * Checks a password attempt against the correct one. Every
+     * Checks a password attempt against the correct one, denying
+     * access outright once every attempt has been exhausted. Every
      * incorrect attempt reduces the remaining attempts by one.
      *
      * @param passwordAttempt the password entered by the user
-     * @return true if the password matches, false otherwise
+     * @return true if the password matches and attempts remain, false otherwise
      */
     public boolean attemptAccess(String passwordAttempt) {
+        if (remainingAttempts <= 0) {
+            return false;
+        }
         if (correctPassword.equals(passwordAttempt)) {
             return true;
         }

@@ -3,6 +3,7 @@ package dev.jenny.diary.views;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
+import java.util.List;
 
 import dev.jenny.diary.controllers.DiaryController;
 import dev.jenny.diary.dtos.MomentDto;
@@ -44,6 +45,9 @@ public class DiaryView extends View {
             if (option == 1) {
                 addMoment();
             }
+            if (option == 2) {
+                printAllMoments();
+            }
             if (option == 7) {
                 out();
             }
@@ -83,6 +87,25 @@ public class DiaryView extends View {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
             addMoment();
         }
+    }
+
+    /** Lists every stored moment through the Controller. */
+    private static void printAllMoments() {
+        List<MomentDto> moments = CONTROLLER.getAllMoments();
+
+        System.out.println();
+        System.out.println("Lista de momentos vividos:");
+        int position = 1;
+        for (MomentDto moment : moments) {
+            System.out.println(position + ". Ocurrio el: " + moment.momentDate().format(DATE_FORMATTER)
+                    + ". Título: " + moment.title()
+                    + ". Descripción: " + moment.description()
+                    + ". Emoción: " + moment.emotion().getDisplayName());
+            position++;
+        }
+        System.out.println();
+
+        printMenu();
     }
 
     /** Prints the numbered list of every available emotion. */

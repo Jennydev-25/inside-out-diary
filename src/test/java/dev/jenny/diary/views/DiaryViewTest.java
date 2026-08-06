@@ -41,15 +41,12 @@ class DiaryViewTest {
      */
     @Test
     void testPrintMenuSelectOption1AddsMomentAndPrintsConfirmation() {
-        String input = String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
-                "1",
+        simulateInput("1",
                 "Un día en el parque de atracciones",
                 "01/05/2024",
                 "Fui con mi familia y me monté en la montaña rusa tres veces seguidas",
                 "1",
                 "7");
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        View.SCANNER = new Scanner(System.in);
 
         DiaryView.printMenu();
 
@@ -74,9 +71,7 @@ class DiaryViewTest {
                 LocalDate.of(2024, 10, 12));
         DiaryControllerSingleton.getInstance().addMoment(seedMoment);
 
-        String input = String.format("%s\n%s\n", "2", "7");
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        View.SCANNER = new Scanner(System.in);
+        simulateInput("2", "7");
 
         DiaryView.printMenu();
 
@@ -93,5 +88,17 @@ class DiaryViewTest {
     void tearDown() {
         System.setIn(inputStream);
         System.setOut(printStream);
+    }
+
+    /**
+     * Feeds the given lines as simulated console input, reinitializing
+     * the shared Scanner so it reads from the new System.in.
+     *
+     * @param lines the lines to feed as input, in order
+     */
+    private void simulateInput(String... lines) {
+        String input = String.join("\n", lines) + "\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.SCANNER = new Scanner(System.in);
     }
 }

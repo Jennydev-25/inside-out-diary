@@ -101,6 +101,28 @@ class DiaryViewTest {
     }
 
     /**
+     * Verifies that choosing option 4 and then filtering by emotion
+     * lists only the moments tagged with that emotion.
+     */
+    @Test
+    void testPrintMenuSelectOption4FilterByEmotionListsMatchingMoments() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una tormenta durante la acampada",
+                "Se me caló la tienda de campaña en mitad de la noche",
+                Emotion.MIEDO,
+                LocalDate.of(2024, 7, 2));
+        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("4", "1", "5", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
+        assertThat(outputStreamCaptor.toString(), containsString("Una tormenta durante la acampada"));
+        assertThat(outputStreamCaptor.toString(), containsString("Miedo"));
+    }
+
+    /**
      * Restores the original System.in and System.out after each test,
      * so later tests aren't affected by this test's redirection.
      */

@@ -94,20 +94,7 @@ public class DiaryView extends View {
 
     /** Lists every stored moment through the Controller. */
     private static void printAllMoments() {
-        List<MomentDto> moments = CONTROLLER.getAllMoments();
-
-        System.out.println();
-        System.out.println("Lista de momentos vividos:");
-        int position = 1;
-        for (MomentDto moment : moments) {
-            System.out.println(position + ". Ocurrio el: " + moment.momentDate().format(DATE_FORMATTER)
-                    + ". Título: " + moment.title()
-                    + ". Descripción: " + moment.description()
-                    + ". Emoción: " + moment.emotion().getDisplayName());
-            position++;
-        }
-        System.out.println();
-
+        printMomentsList(CONTROLLER.getAllMoments());
         printMenu();
     }
 
@@ -127,6 +114,24 @@ public class DiaryView extends View {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
             deleteMoment();
         }
+    }
+
+    /**
+     * Prints a numbered list of moments, in the same format used by
+     * the "list all" option and every filter option.
+     */
+    private static void printMomentsList(List<MomentDto> moments) {
+        System.out.println();
+        System.out.println("Lista de momentos vividos:");
+        int position = 1;
+        for (MomentDto moment : moments) {
+            System.out.println(position + ". Ocurrio el: " + moment.momentDate().format(DATE_FORMATTER)
+                    + ". Título: " + moment.title()
+                    + ". Descripción: " + moment.description()
+                    + ". Emoción: " + moment.emotion().getDisplayName());
+            position++;
+        }
+        System.out.println();
     }
 
     /** Prints the numbered list of every available emotion. */

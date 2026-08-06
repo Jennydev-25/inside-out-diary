@@ -48,6 +48,9 @@ public class DiaryView extends View {
             if (option == 2) {
                 printAllMoments();
             }
+            if (option == 3) {
+                deleteMoment();
+            }
             if (option == 7) {
                 out();
             }
@@ -58,7 +61,7 @@ public class DiaryView extends View {
         }
     }
 
-    /** Prompts for a new moment's data and adds it through the Controller. */
+    /** Requests a new moment's data and adds it through the Controller. */
     private static void addMoment() {
         try {
             System.out.println();
@@ -106,6 +109,24 @@ public class DiaryView extends View {
         System.out.println();
 
         printMenu();
+    }
+
+    /** Requests a moment's id and deletes it through the Controller. */
+    private static void deleteMoment() {
+        try {
+            System.out.println();
+            System.out.print("Ingresa el identificador del momento: ");
+            Long id = Long.parseLong(SCANNER.nextLine());
+
+            CONTROLLER.deleteMoment(id);
+
+            System.out.println("\nMomento eliminado correctamente.\n");
+            printMenu();
+
+        } catch (Exception e) {
+            System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
+            deleteMoment();
+        }
     }
 
     /** Prints the numbered list of every available emotion. */

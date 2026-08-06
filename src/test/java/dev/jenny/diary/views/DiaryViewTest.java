@@ -81,6 +81,26 @@ class DiaryViewTest {
     }
 
     /**
+     * Verifies that choosing option 3 deletes the moment matching the
+     * given id and prints the confirmation message.
+     */
+    @Test
+    void testPrintMenuSelectOption3DeletesMomentAndPrintsConfirmation() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una cena con amigas del instituto",
+                "Nos reímos recordando anécdotas de hace diez años",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 3, 20));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("3", savedMoment.id().toString(), "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
+    }
+
+    /**
      * Restores the original System.in and System.out after each test,
      * so later tests aren't affected by this test's redirection.
      */

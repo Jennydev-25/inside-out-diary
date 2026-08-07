@@ -201,6 +201,28 @@ class MomentModifyViewTest {
     }
 
     /**
+     * Verifies that an invalid date format when modifying shows an error and
+     * retries.
+     */
+    @Test
+    void testPrintModifyMenuByDateWithInvalidFormatShowsErrorAndRetries() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Un concierto al aire libre con amigas",
+                "Cantamos todas las canciones de memoria hasta quedarnos afónicas",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 7, 19));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput(savedMoment.id().toString(), "4", "32/13/2024",
+                savedMoment.id().toString(), "4", "20/07/2024", "7");
+
+        MomentModifyView.printModifyMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
+    }
+
+    /**
      * Verifies that modifying a moment's date updates it and prints the
      * confirmation.
      */

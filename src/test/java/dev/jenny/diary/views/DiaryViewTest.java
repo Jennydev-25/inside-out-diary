@@ -173,6 +173,33 @@ class DiaryViewTest {
         assertThat(titleWasUpdated, is(true));
     }
 
+    /**
+     * Verifies that modifying a moment's description updates it and prints the
+     * confirmation.
+     */
+    @Test
+    void testPrintMenuSelectOption5ModifyDescriptionUpdatesMomentAndPrintsConfirmation() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Un paseo por la playa al atardecer",
+                "Caminé descalza por la orilla mientras se ponía el sol",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 8, 14));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("5", savedMoment.id().toString(), "2",
+                "Caminé descalza por la orilla y recogí conchas con mi hermano", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
+
+        List<MomentDto> moments = DiaryControllerSingleton.getInstance().getAllMoments();
+        boolean descriptionWasUpdated = moments.stream()
+                .anyMatch(moment -> moment.description()
+                        .equals("Caminé descalza por la orilla y recogí conchas con mi hermano"));
+        assertThat(descriptionWasUpdated, is(true));
+    }
+
     /** Restores System.in and System.out after each test. */
     @AfterEach
     void tearDown() {

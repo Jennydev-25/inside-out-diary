@@ -46,6 +46,16 @@ public class AccessService {
     }
 
     /**
+     * Returns the current number of attempts left before access is
+     * permanently denied.
+     *
+     * @return the number of attempts remaining
+     */
+    public int getRemainingAttempts() {
+        return remainingAttempts;
+    }
+
+    /**
      * Returns the maximum number of attempts allowed before access is
      * permanently denied, so the View can display it without
      * hardcoding the number in more than one place.

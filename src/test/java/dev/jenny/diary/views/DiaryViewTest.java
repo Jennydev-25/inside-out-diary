@@ -225,6 +225,32 @@ class DiaryViewTest {
         assertThat(emotionWasUpdated, is(true));
     }
 
+    /**
+     * Verifies that modifying a moment's date updates it and prints the
+     * confirmation.
+     */
+    @Test
+    void testPrintMenuSelectOption5ModifyDateUpdatesMomentAndPrintsConfirmation() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Un concierto al aire libre con amigas",
+                "Cantamos todas las canciones de memoria hasta quedarnos afónicas",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 7, 19));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("5", savedMoment.id().toString(), "4", "20/07/2024", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
+
+        List<MomentDto> moments = DiaryControllerSingleton.getInstance().getAllMoments();
+        boolean dateWasUpdated = moments.stream()
+                .anyMatch(moment -> moment.id().equals(savedMoment.id())
+                        && moment.momentDate().equals(LocalDate.of(2024, 7, 20)));
+        assertThat(dateWasUpdated, is(true));
+    }
+
     /** Restores System.in and System.out after each test. */
     @AfterEach
     void tearDown() {

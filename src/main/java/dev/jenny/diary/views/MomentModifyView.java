@@ -38,6 +38,9 @@ public class MomentModifyView extends View {
             if (fieldOption == 1) {
                 modifyTitle(id);
             }
+            if (fieldOption == 2) {
+                modifyDescription(id);
+            }
 
         } catch (Exception e) {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
@@ -51,6 +54,17 @@ public class MomentModifyView extends View {
         String title = SCANNER.nextLine();
 
         CONTROLLER.updateMomentTitle(id, title);
+
+        System.out.println("\nMomento modificado correctamente.\n");
+        DiaryView.printMenu();
+    }
+
+    /** Requests a new description and updates the moment through the Controller. */
+    private static void modifyDescription(Long id) {
+        System.out.print("Ingresa la nueva descripción: ");
+        String description = SCANNER.nextLine();
+
+        CONTROLLER.updateMomentDescription(id, description);
 
         System.out.println("\nMomento modificado correctamente.\n");
         DiaryView.printMenu();

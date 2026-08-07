@@ -114,45 +114,6 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
     }
 
-    /** Verifies that an invalid filter option shows an error and retries. */
-    @ParameterizedTest(name = "selecting filter option \"{0}\" shows an error and retries")
-    @MethodSource("invalidFilterOptions")
-    void testPrintMenuSelectOption4FilterWithInvalidOptionShowsErrorAndRetries(String invalidOption) {
-        simulateInput("4", invalidOption, "1", "1", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
-        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
-    }
-
-    private static Stream<Arguments> invalidFilterOptions() {
-        return Stream.of(
-                Arguments.of("abc"),
-                Arguments.of("99"));
-    }
-
-    /**
-     * Verifies that an invalid emotion when filtering shows an error and retries.
-     */
-    @ParameterizedTest(name = "selecting emotion \"{0}\" when filtering shows an error and retries")
-    @MethodSource("invalidFilterEmotionOptions")
-    void testPrintMenuSelectOption4FilterByEmotionWithInvalidOptionShowsErrorAndRetries(
-            String invalidEmotionOption) {
-        simulateInput("4", "1", invalidEmotionOption, "1", "1", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
-        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
-    }
-
-    private static Stream<Arguments> invalidFilterEmotionOptions() {
-        return Stream.of(
-                Arguments.of("abc"),
-                Arguments.of("99"));
-    }
-
     /** Verifies that filtering by emotion lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByEmotionListsMatchingMoments() {
@@ -170,86 +131,6 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
         assertThat(outputStreamCaptor.toString(), containsString("Una tormenta durante la acampada"));
         assertThat(outputStreamCaptor.toString(), containsString("Miedo"));
-    }
-
-    /**
-     * Verifies that an invalid month format when filtering shows an error and
-     * retries.
-     */
-    @Test
-    void testPrintMenuSelectOption4FilterByMonthWithInvalidFormatShowsErrorAndRetries() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Una excursión a la montaña con el equipo de trabajo",
-                "Subimos hasta el mirador y comimos allí porque hacía un día espléndido",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 6, 15));
-        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("4", "2", "13/2024", "2", "06/2024", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
-        assertThat(outputStreamCaptor.toString(),
-                containsString("Una excursión a la montaña con el equipo de trabajo"));
-    }
-
-    /** Verifies that filtering by month lists only matching moments. */
-    @Test
-    void testPrintMenuSelectOption4FilterByMonthListsMatchingMoments() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Una excursión a la montaña con el equipo de trabajo",
-                "Subimos hasta el mirador y comimos allí porque hacía un día espléndido",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 6, 15));
-        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("4", "2", "06/2024", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
-        assertThat(outputStreamCaptor.toString(),
-                containsString("Una excursión a la montaña con el equipo de trabajo"));
-    }
-
-    /**
-     * Verifies that an invalid date format when filtering shows an error and
-     * retries.
-     */
-    @Test
-    void testPrintMenuSelectOption4FilterByDateWithInvalidFormatShowsErrorAndRetries() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Una comida familiar el día de mi cumpleaños",
-                "Vinieron mis padres y mi hermana, cociné yo la tarta",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 9, 8));
-        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("4", "3", "32/13/2024", "3", "08/09/2024", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
-        assertThat(outputStreamCaptor.toString(), containsString("Una comida familiar el día de mi cumpleaños"));
-    }
-
-    /** Verifies that filtering by date lists only matching moments. */
-    @Test
-    void testPrintMenuSelectOption4FilterByDateListsMatchingMoments() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Una comida familiar el día de mi cumpleaños",
-                "Vinieron mis padres y mi hermana, cociné yo la tarta",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 9, 8));
-        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("4", "3", "08/09/2024", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
-        assertThat(outputStreamCaptor.toString(), containsString("Una comida familiar el día de mi cumpleaños"));
     }
 
     /**

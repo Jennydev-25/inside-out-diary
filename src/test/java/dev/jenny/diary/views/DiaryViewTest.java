@@ -183,6 +183,24 @@ class DiaryViewTest {
                 Arguments.of("999999"));
     }
 
+    /** Verifies that an invalid filter option shows an error and retries. */
+    @ParameterizedTest(name = "selecting filter option \"{0}\" shows an error and retries")
+    @MethodSource("invalidFilterOptions")
+    void testPrintMenuSelectOption4FilterWithInvalidOptionShowsErrorAndRetries(String invalidOption) {
+        simulateInput("4", invalidOption, "1", "1", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
+    }
+
+    private static Stream<Arguments> invalidFilterOptions() {
+        return Stream.of(
+                Arguments.of("abc"),
+                Arguments.of("99"));
+    }
+
     /** Verifies that filtering by emotion lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByEmotionListsMatchingMoments() {

@@ -1,5 +1,7 @@
 package dev.jenny.diary.views;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 
 import dev.jenny.diary.controllers.DiaryController;
@@ -10,6 +12,8 @@ import dev.jenny.diary.singletons.DiaryControllerSingleton;
  * View responsible for filtering moments by emotion, month, or date.
  */
 public class MomentFilterView extends View {
+
+    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
 
     private static final DiaryController CONTROLLER = DiaryControllerSingleton.getInstance();
 
@@ -33,6 +37,9 @@ public class MomentFilterView extends View {
             if (filterOption == 1) {
                 filterByEmotion();
             }
+            if (filterOption == 2) {
+                filterByMonth();
+            }
 
         } catch (Exception e) {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
@@ -49,6 +56,16 @@ public class MomentFilterView extends View {
         Emotion emotion = Emotion.fromOption(emotionOption);
 
         MomentListView.printMomentsList(CONTROLLER.getMomentsByEmotion(emotion));
+        DiaryView.printMenu();
+    }
+
+    /** Requests a month and lists the moments that occurred in it. */
+    private static void filterByMonth() {
+        System.out.println();
+        System.out.print("Ingresa el mes (mm/aaaa): ");
+        YearMonth yearMonth = YearMonth.parse(SCANNER.nextLine(), MONTH_FORMATTER);
+
+        MomentListView.printMomentsList(CONTROLLER.getMomentsByMonth(yearMonth));
         DiaryView.printMenu();
     }
 

@@ -251,6 +251,19 @@ class DiaryViewTest {
         assertThat(dateWasUpdated, is(true));
     }
 
+    /**
+     * Verifies that choosing option 6 exports the moments and prints the
+     * confirmation.
+     */
+    @Test
+    void testPrintMenuSelectOption6ExportsMomentsAndPrintsConfirmation() {
+        simulateInput("6", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Diario exportado correctamente."));
+    }
+
     /** Restores System.in and System.out after each test. */
     @AfterEach
     void tearDown() {

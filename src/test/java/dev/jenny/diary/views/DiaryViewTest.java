@@ -322,6 +322,43 @@ class DiaryViewTest {
     }
 
     /**
+     * Verifies that an invalid id when modifying a moment shows an error and
+     * retries.
+     */
+    @ParameterizedTest(name = "modifying a moment with invalid {0} shows an error and retries")
+    @MethodSource("invalidModifyIdScenarios")
+    void testPrintMenuSelectOption5ModifyWithInvalidIdShowsErrorAndRetries(String scenario,
+            List<String> failingAttempt) {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una tarde pintando con acuarelas",
+                "Probé una técnica nueva que vi en un vídeo",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 2, 10));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        List<String> input = new ArrayList<>();
+        input.add("5");
+        input.addAll(failingAttempt);
+        input.add(savedMoment.id().toString());
+        input.add("1");
+        input.add("Una tarde pintando con acuarelas y café");
+        input.add("7");
+
+        simulateInput(input.toArray(new String[0]));
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
+    }
+
+    private static Stream<Arguments> invalidModifyIdScenarios() {
+        return Stream.of(
+                Arguments.of("id no numérico", List.of("abc")),
+                Arguments.of("id inexistente", List.of("999999", "1", "Un título cualquiera")));
+    }
+
+    /**
      * Verifies that modifying a moment's title updates it and prints the
      * confirmation.
      */

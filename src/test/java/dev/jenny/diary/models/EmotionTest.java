@@ -35,15 +35,20 @@ class EmotionTest {
      * Verifies that an option outside the 1-10 range is rejected
      * with a clear error instead of a raw array index exception.
      */
-    @Test
-    void testFromOptionWithOutOfRangeOptionThrowsIllegalArgumentException() {
-        int invalidOption = 15;
-
+    @ParameterizedTest(name = "option {0} is expected to be rejected")
+    @MethodSource("outOfRangeOptions")
+    void testFromOptionWithOutOfRangeOptionThrowsIllegalArgumentException(int invalidOption) {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> Emotion.fromOption(invalidOption));
 
-        assertThat(exception.getMessage(), is(equalTo("Invalid emotion option: 15")));
+        assertThat(exception.getMessage(), is(equalTo("Invalid emotion option: " + invalidOption)));
+    }
+
+    private static Stream<Arguments> outOfRangeOptions() {
+        return Stream.of(
+                Arguments.of(15),
+                Arguments.of(0));
     }
 
     /**

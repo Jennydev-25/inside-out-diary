@@ -50,7 +50,8 @@ class DiaryViewTest {
     private static Stream<Arguments> invalidMenuOptions() {
         return Stream.of(
                 Arguments.of("abc"),
-                Arguments.of("99"));
+                Arguments.of("99"),
+                Arguments.of("0"));
     }
 
     /**

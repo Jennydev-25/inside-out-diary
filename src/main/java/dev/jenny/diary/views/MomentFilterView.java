@@ -1,5 +1,6 @@
 package dev.jenny.diary.views;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -40,6 +41,9 @@ public class MomentFilterView extends View {
             if (filterOption == 2) {
                 filterByMonth();
             }
+            if (filterOption == 3) {
+                filterByDate();
+            }
 
         } catch (Exception e) {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
@@ -66,6 +70,16 @@ public class MomentFilterView extends View {
         YearMonth yearMonth = YearMonth.parse(SCANNER.nextLine(), MONTH_FORMATTER);
 
         MomentListView.printMomentsList(CONTROLLER.getMomentsByMonth(yearMonth));
+        DiaryView.printMenu();
+    }
+
+    /** Requests a date and lists the moments that occurred on it. */
+    private static void filterByDate() {
+        System.out.println();
+        System.out.print("Ingresa la fecha (dd/mm/aaaa): ");
+        LocalDate date = LocalDate.parse(SCANNER.nextLine(), DATE_FORMATTER);
+
+        MomentListView.printMomentsList(CONTROLLER.getMomentsByDate(date));
         DiaryView.printMenu();
     }
 

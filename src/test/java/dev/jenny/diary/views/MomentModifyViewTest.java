@@ -148,6 +148,34 @@ class MomentModifyViewTest {
     }
 
     /**
+     * Verifies that an invalid emotion when modifying shows an error and retries.
+     */
+    @ParameterizedTest(name = "selecting emotion \"{0}\" when modifying shows an error and retries")
+    @MethodSource("invalidModifyEmotionOptions")
+    void testPrintModifyMenuByEmotionWithInvalidOptionShowsErrorAndRetries(String invalidEmotionOption) {
+        MomentDto seedMoment = new MomentDto(null,
+                "Me robaron una rueda del coche",
+                "Salí por la mañana y me encontré el coche apoyado en un ladrillo, sin rueda",
+                Emotion.IRA,
+                LocalDate.of(2024, 5, 22));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput(savedMoment.id().toString(), "3", invalidEmotionOption,
+                savedMoment.id().toString(), "3", "2", "7");
+
+        MomentModifyView.printModifyMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
+    }
+
+    private static Stream<Arguments> invalidModifyEmotionOptions() {
+        return Stream.of(
+                Arguments.of("abc"),
+                Arguments.of("99"));
+    }
+
+    /**
      * Verifies that modifying a moment's emotion updates it and prints the
      * confirmation.
      */

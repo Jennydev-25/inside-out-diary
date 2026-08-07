@@ -37,6 +37,23 @@ class DiaryViewTest {
         System.setOut(new PrintStream(outputStreamCaptor));
     }
 
+    /** Verifies that an invalid main menu option shows an error and retries. */
+    @ParameterizedTest(name = "selecting option \"{0}\" shows an error and retries")
+    @MethodSource("invalidMenuOptions")
+    void testPrintMenuWithInvalidOptionShowsErrorAndRetries(String invalidOption) {
+        simulateInput(invalidOption, "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Debe introducir un valor válido (1-7)."));
+    }
+
+    private static Stream<Arguments> invalidMenuOptions() {
+        return Stream.of(
+                Arguments.of("abc"),
+                Arguments.of("99"));
+    }
+
     /**
      * Verifies that choosing option 1 adds a moment and prints the confirmation.
      */

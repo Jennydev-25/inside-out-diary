@@ -69,6 +69,32 @@ class MomentModifyViewTest {
                 Arguments.of("id inexistente", List.of("999999", "1", "Un título cualquiera")));
     }
 
+    /** Verifies that an invalid field option shows an error and retries. */
+    @ParameterizedTest(name = "selecting field option \"{0}\" shows an error and retries")
+    @MethodSource("invalidFieldOptions")
+    void testPrintModifyMenuWithInvalidFieldOptionShowsErrorAndRetries(String invalidFieldOption) {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una tarde arreglando la bicicleta",
+                "Se me pinchó la rueda trasera y aproveché para engrasar la cadena",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 3, 15));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput(savedMoment.id().toString(), invalidFieldOption,
+                savedMoment.id().toString(), "1", "Una tarde arreglando la bicicleta con mi hermano", "7");
+
+        MomentModifyView.printModifyMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
+    }
+
+    private static Stream<Arguments> invalidFieldOptions() {
+        return Stream.of(
+                Arguments.of("abc"),
+                Arguments.of("99"));
+    }
+
     /**
      * Verifies that modifying a moment's title updates it and prints the
      * confirmation.

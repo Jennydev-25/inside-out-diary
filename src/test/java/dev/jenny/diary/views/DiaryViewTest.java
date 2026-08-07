@@ -201,6 +201,27 @@ class DiaryViewTest {
                 Arguments.of("99"));
     }
 
+    /**
+     * Verifies that an invalid emotion when filtering shows an error and retries.
+     */
+    @ParameterizedTest(name = "selecting emotion \"{0}\" when filtering shows an error and retries")
+    @MethodSource("invalidFilterEmotionOptions")
+    void testPrintMenuSelectOption4FilterByEmotionWithInvalidOptionShowsErrorAndRetries(
+            String invalidEmotionOption) {
+        simulateInput("4", "1", invalidEmotionOption, "1", "1", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
+    }
+
+    private static Stream<Arguments> invalidFilterEmotionOptions() {
+        return Stream.of(
+                Arguments.of("abc"),
+                Arguments.of("99"));
+    }
+
     /** Verifies that filtering by emotion lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByEmotionListsMatchingMoments() {

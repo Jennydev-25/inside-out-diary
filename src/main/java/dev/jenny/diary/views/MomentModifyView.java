@@ -59,8 +59,7 @@ public class MomentModifyView extends View {
 
         CONTROLLER.updateMomentTitle(id, title);
 
-        System.out.println("\nMomento modificado correctamente.\n");
-        DiaryView.printMenu();
+        printModificationConfirmation();
     }
 
     /** Requests a new description and updates the moment through the Controller. */
@@ -70,8 +69,7 @@ public class MomentModifyView extends View {
 
         CONTROLLER.updateMomentDescription(id, description);
 
-        System.out.println("\nMomento modificado correctamente.\n");
-        DiaryView.printMenu();
+        printModificationConfirmation();
     }
 
     /** Requests a new emotion and updates the moment through the Controller. */
@@ -84,6 +82,14 @@ public class MomentModifyView extends View {
 
         CONTROLLER.updateMomentEmotion(id, emotion);
 
+        printModificationConfirmation();
+    }
+
+    /**
+     * Prints the shared confirmation message for every modify option, then
+     * returns to the main menu.
+     */
+    private static void printModificationConfirmation() {
         System.out.println("\nMomento modificado correctamente.\n");
         DiaryView.printMenu();
     }

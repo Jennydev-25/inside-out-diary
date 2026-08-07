@@ -11,10 +11,14 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import dev.jenny.diary.dtos.MomentDto;
 import dev.jenny.diary.models.Emotion;
@@ -90,6 +94,34 @@ class DiaryViewTest {
         DiaryView.printMenu();
 
         assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
+    }
+
+    /**
+     * Verifies that an invalid id when deleting a moment shows an error and
+     * retries.
+     */
+    @ParameterizedTest(name = "deleting a moment with id \"{0}\" shows an error and retries")
+    @MethodSource("invalidDeleteIds")
+    void testPrintMenuSelectOption3DeleteMomentWithInvalidIdShowsErrorAndRetries(String invalidId) {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una tarde jugando a las cartas con mi abuela",
+                "Me enseñó un truco de magia que hacía siempre con la baraja española",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 4, 6));
+        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("3", invalidId, savedMoment.id().toString(), "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
+    }
+
+    private static Stream<Arguments> invalidDeleteIds() {
+        return Stream.of(
+                Arguments.of("abc"),
+                Arguments.of("999999"));
     }
 
     /** Verifies that filtering by emotion lists only matching moments. */

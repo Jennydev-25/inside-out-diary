@@ -1,5 +1,6 @@
 package dev.jenny.diary.views;
 
+import java.time.LocalDate;
 import java.util.InputMismatchException;
 
 import dev.jenny.diary.controllers.DiaryController;
@@ -45,6 +46,9 @@ public class MomentModifyView extends View {
             if (fieldOption == 3) {
                 modifyEmotion(id);
             }
+            if (fieldOption == 4) {
+                modifyDate(id);
+            }
 
         } catch (Exception e) {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
@@ -81,6 +85,16 @@ public class MomentModifyView extends View {
         Emotion emotion = Emotion.fromOption(emotionOption);
 
         CONTROLLER.updateMomentEmotion(id, emotion);
+
+        printModificationConfirmation();
+    }
+
+    /** Requests a new date and updates the moment through the Controller. */
+    private static void modifyDate(Long id) {
+        System.out.print("Ingresa la nueva fecha (dd/mm/aaaa): ");
+        LocalDate momentDate = LocalDate.parse(SCANNER.nextLine(), DATE_FORMATTER);
+
+        CONTROLLER.updateMomentDate(id, momentDate);
 
         printModificationConfirmation();
     }

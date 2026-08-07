@@ -92,7 +92,8 @@ class MomentModifyViewTest {
     private static Stream<Arguments> invalidFieldOptions() {
         return Stream.of(
                 Arguments.of("abc"),
-                Arguments.of("99"));
+                Arguments.of("99"),
+                Arguments.of("0"));
     }
 
     /**

@@ -282,6 +282,27 @@ class DiaryViewTest {
                 containsString("Una excursión a la montaña con el equipo de trabajo"));
     }
 
+    /**
+     * Verifies that an invalid date format when filtering shows an error and
+     * retries.
+     */
+    @Test
+    void testPrintMenuSelectOption4FilterByDateWithInvalidFormatShowsErrorAndRetries() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una comida familiar el día de mi cumpleaños",
+                "Vinieron mis padres y mi hermana, cociné yo la tarta",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 9, 8));
+        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("4", "3", "32/13/2024", "3", "08/09/2024", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Una comida familiar el día de mi cumpleaños"));
+    }
+
     /** Verifies that filtering by date lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByDateListsMatchingMoments() {

@@ -44,4 +44,15 @@ public class AccessService {
     public boolean hasAttemptsRemaining() {
         return remainingAttempts > 0;
     }
+
+    /**
+     * Returns the maximum number of attempts allowed before access is
+     * permanently denied, so the View can display it without
+     * hardcoding the number in more than one place.
+     *
+     * @return the configured maximum number of attempts
+     */
+    public int getMaxAttempts() {
+        return MAX_ATTEMPTS;
+    }
 }

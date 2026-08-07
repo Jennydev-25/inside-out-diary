@@ -3,6 +3,7 @@ package dev.jenny.diary.views;
 import java.util.InputMismatchException;
 
 import dev.jenny.diary.controllers.DiaryController;
+import dev.jenny.diary.models.Emotion;
 import dev.jenny.diary.singletons.DiaryControllerSingleton;
 
 /**
@@ -41,6 +42,9 @@ public class MomentModifyView extends View {
             if (fieldOption == 2) {
                 modifyDescription(id);
             }
+            if (fieldOption == 3) {
+                modifyEmotion(id);
+            }
 
         } catch (Exception e) {
             System.out.println("\nDatos introducidos no válidos. " + e.getMessage() + "\n");
@@ -65,6 +69,20 @@ public class MomentModifyView extends View {
         String description = SCANNER.nextLine();
 
         CONTROLLER.updateMomentDescription(id, description);
+
+        System.out.println("\nMomento modificado correctamente.\n");
+        DiaryView.printMenu();
+    }
+
+    /** Requests a new emotion and updates the moment through the Controller. */
+    private static void modifyEmotion(Long id) {
+        System.out.println();
+        System.out.println("Selecciona una emoción:");
+        printEmotionOptions();
+        int emotionOption = Integer.parseInt(SCANNER.nextLine());
+        Emotion emotion = Emotion.fromOption(emotionOption);
+
+        CONTROLLER.updateMomentEmotion(id, emotion);
 
         System.out.println("\nMomento modificado correctamente.\n");
         DiaryView.printMenu();

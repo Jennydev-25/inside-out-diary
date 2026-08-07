@@ -2,9 +2,12 @@ package dev.jenny.diary.daos;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -94,5 +97,27 @@ class MomentCsvDaoTest {
                         "Cuando llegué a casa, mi hermana me dijo \"qué tarde vienes\" y nos reímos un rato",
                         "1,Un día especial,\"Cuando llegué a casa, mi hermana me dijo \"\"qué tarde vienes\"\" y nos reímos un rato\",Alegría,2026-07-01",
                         "comma and double quote combined"));
+    }
+
+    /**
+     * Verifies that a failure writing the file is wrapped in an
+     * UncheckedIOException instead of propagating the checked one.
+     */
+    @Test
+    void testWriteWithUnwritablePathThrowsUncheckedIOException() throws IOException {
+        Path tempDirectory = Files.createTempDirectory("momentos-test-dir");
+        try {
+            MomentCsvDao unwritableDao = new MomentCsvDao(tempDirectory);
+            MomentDto moment = new MomentDto(1L, "Un día en el parque de atracciones",
+                    "Fui con mis amigas al parque de atracciones", Emotion.ALEGRIA, LocalDate.of(2026, 7, 1));
+
+            UncheckedIOException exception = assertThrows(
+                    UncheckedIOException.class,
+                    () -> unwritableDao.write(List.of(moment)));
+
+            assertThat(exception.getCause(), is(instanceOf(IOException.class)));
+        } finally {
+            Files.deleteIfExists(tempDirectory);
+        }
     }
 }

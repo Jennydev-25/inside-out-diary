@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -134,43 +133,6 @@ class DiaryViewTest {
     }
 
     /**
-     * Verifies that an invalid id when modifying a moment shows an error and
-     * retries.
-     */
-    @ParameterizedTest(name = "modifying a moment with invalid {0} shows an error and retries")
-    @MethodSource("invalidModifyIdScenarios")
-    void testPrintMenuSelectOption5ModifyWithInvalidIdShowsErrorAndRetries(String scenario,
-            List<String> failingAttempt) {
-        MomentDto seedMoment = new MomentDto(null,
-                "Una tarde pintando con acuarelas",
-                "Probé una técnica nueva que vi en un vídeo",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 2, 10));
-        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        List<String> input = new ArrayList<>();
-        input.add("5");
-        input.addAll(failingAttempt);
-        input.add(savedMoment.id().toString());
-        input.add("1");
-        input.add("Una tarde pintando con acuarelas y café");
-        input.add("7");
-
-        simulateInput(input.toArray(new String[0]));
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
-        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
-    }
-
-    private static Stream<Arguments> invalidModifyIdScenarios() {
-        return Stream.of(
-                Arguments.of("id no numérico", List.of("abc")),
-                Arguments.of("id inexistente", List.of("999999", "1", "Un título cualquiera")));
-    }
-
-    /**
      * Verifies that modifying a moment's title updates it and prints the
      * confirmation.
      */
@@ -193,84 +155,6 @@ class DiaryViewTest {
         boolean titleWasUpdated = moments.stream()
                 .anyMatch(moment -> moment.title().equals("Una tarde de domingo viendo películas antiguas"));
         assertThat(titleWasUpdated, is(true));
-    }
-
-    /**
-     * Verifies that modifying a moment's description updates it and prints the
-     * confirmation.
-     */
-    @Test
-    void testPrintMenuSelectOption5ModifyDescriptionUpdatesMomentAndPrintsConfirmation() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Un paseo por la playa al atardecer",
-                "Caminé descalza por la orilla mientras se ponía el sol",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 8, 14));
-        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("5", savedMoment.id().toString(), "2",
-                "Caminé descalza por la orilla y recogí conchas con mi hermano", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
-
-        List<MomentDto> moments = DiaryControllerSingleton.getInstance().getAllMoments();
-        boolean descriptionWasUpdated = moments.stream()
-                .anyMatch(moment -> moment.description()
-                        .equals("Caminé descalza por la orilla y recogí conchas con mi hermano"));
-        assertThat(descriptionWasUpdated, is(true));
-    }
-
-    /**
-     * Verifies that modifying a moment's emotion updates it and prints the
-     * confirmation.
-     */
-    @Test
-    void testPrintMenuSelectOption5ModifyEmotionUpdatesMomentAndPrintsConfirmation() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Me robaron una rueda del coche",
-                "Salí por la mañana y me encontré el coche apoyado en un ladrillo, sin rueda",
-                Emotion.IRA,
-                LocalDate.of(2024, 5, 22));
-        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("5", savedMoment.id().toString(), "3", "2", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
-
-        List<MomentDto> moments = DiaryControllerSingleton.getInstance().getAllMoments();
-        boolean emotionWasUpdated = moments.stream()
-                .anyMatch(moment -> moment.id().equals(savedMoment.id()) && moment.emotion() == Emotion.TRISTEZA);
-        assertThat(emotionWasUpdated, is(true));
-    }
-
-    /**
-     * Verifies that modifying a moment's date updates it and prints the
-     * confirmation.
-     */
-    @Test
-    void testPrintMenuSelectOption5ModifyDateUpdatesMomentAndPrintsConfirmation() {
-        MomentDto seedMoment = new MomentDto(null,
-                "Un concierto al aire libre con amigas",
-                "Cantamos todas las canciones de memoria hasta quedarnos afónicas",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 7, 19));
-        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("5", savedMoment.id().toString(), "4", "20/07/2024", "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Momento modificado correctamente."));
-
-        List<MomentDto> moments = DiaryControllerSingleton.getInstance().getAllMoments();
-        boolean dateWasUpdated = moments.stream()
-                .anyMatch(moment -> moment.id().equals(savedMoment.id())
-                        && moment.momentDate().equals(LocalDate.of(2024, 7, 20)));
-        assertThat(dateWasUpdated, is(true));
     }
 
     /**

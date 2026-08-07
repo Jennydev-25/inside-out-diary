@@ -241,6 +241,28 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Miedo"));
     }
 
+    /**
+     * Verifies that an invalid month format when filtering shows an error and
+     * retries.
+     */
+    @Test
+    void testPrintMenuSelectOption4FilterByMonthWithInvalidFormatShowsErrorAndRetries() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una excursión a la montaña con el equipo de trabajo",
+                "Subimos hasta el mirador y comimos allí porque hacía un día espléndido",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 6, 15));
+        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("4", "2", "13/2024", "2", "06/2024", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(),
+                containsString("Una excursión a la montaña con el equipo de trabajo"));
+    }
+
     /** Verifies that filtering by month lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByMonthListsMatchingMoments() {

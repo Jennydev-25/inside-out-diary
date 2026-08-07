@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -56,6 +57,47 @@ class DiaryViewTest {
         boolean momentWasAdded = moments.stream()
                 .anyMatch(moment -> moment.title().equals("Un día en el parque de atracciones"));
         assertThat(momentWasAdded, is(true));
+    }
+
+    /**
+     * Verifies that invalid input when adding a moment shows an error and retries.
+     */
+    @ParameterizedTest(name = "adding a moment with invalid {0} shows an error and retries")
+    @MethodSource("invalidAddScenarios")
+    void testPrintMenuSelectOption1AddMomentWithInvalidInputShowsErrorAndRetries(String field,
+            List<String> failingAttempt) {
+        List<String> input = new ArrayList<>();
+        input.add("1");
+        input.addAll(failingAttempt);
+        input.add("Una tarde soleada en el parque");
+        input.add("12/04/2024");
+        input.add("Dimos un paseo largo y comimos un helado");
+        input.add("1");
+        input.add("7");
+
+        simulateInput(input.toArray(new String[0]));
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Momento añadido correctamente."));
+    }
+
+    private static Stream<Arguments> invalidAddScenarios() {
+        return Stream.of(
+                Arguments.of("fecha", List.of(
+                        "Una tarde soleada en el parque",
+                        "32/13/2024")),
+                Arguments.of("emoción no numérica", List.of(
+                        "Una tarde soleada en el parque",
+                        "12/04/2024",
+                        "Dimos un paseo largo y comimos un helado",
+                        "abc")),
+                Arguments.of("emoción fuera de rango", List.of(
+                        "Una tarde soleada en el parque",
+                        "12/04/2024",
+                        "Dimos un paseo largo y comimos un helado",
+                        "99")));
     }
 
     /** Verifies that choosing option 2 lists every stored moment. */

@@ -123,6 +123,28 @@ class DiaryViewTest {
     }
 
     /**
+     * Verifies that choosing option 4 and then filtering by month lists
+     * only the moments that occurred in that month.
+     */
+    @Test
+    void testPrintMenuSelectOption4FilterByMonthListsMatchingMoments() {
+        MomentDto seedMoment = new MomentDto(null,
+                "Una excursión a la montaña con el equipo de trabajo",
+                "Subimos hasta el mirador y comimos allí porque hacía un día espléndido",
+                Emotion.ALEGRIA,
+                LocalDate.of(2024, 6, 15));
+        DiaryControllerSingleton.getInstance().addMoment(seedMoment);
+
+        simulateInput("4", "2", "06/2024", "7");
+
+        DiaryView.printMenu();
+
+        assertThat(outputStreamCaptor.toString(), containsString("Lista de momentos vividos:"));
+        assertThat(outputStreamCaptor.toString(),
+                containsString("Una excursión a la montaña con el equipo de trabajo"));
+    }
+
+    /**
      * Restores the original System.in and System.out after each test,
      * so later tests aren't affected by this test's redirection.
      */

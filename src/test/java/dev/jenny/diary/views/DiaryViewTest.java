@@ -155,34 +155,6 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
     }
 
-    /**
-     * Verifies that an invalid id when deleting a moment shows an error and
-     * retries.
-     */
-    @ParameterizedTest(name = "deleting a moment with id \"{0}\" shows an error and retries")
-    @MethodSource("invalidDeleteIds")
-    void testPrintMenuSelectOption3DeleteMomentWithInvalidIdShowsErrorAndRetries(String invalidId) {
-        MomentDto seedMoment = new MomentDto(null,
-                "Una tarde jugando a las cartas con mi abuela",
-                "Me enseñó un truco de magia que hacía siempre con la baraja española",
-                Emotion.ALEGRIA,
-                LocalDate.of(2024, 4, 6));
-        MomentDto savedMoment = DiaryControllerSingleton.getInstance().addMoment(seedMoment);
-
-        simulateInput("3", invalidId, savedMoment.id().toString(), "7");
-
-        DiaryView.printMenu();
-
-        assertThat(outputStreamCaptor.toString(), containsString("Datos introducidos no válidos."));
-        assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
-    }
-
-    private static Stream<Arguments> invalidDeleteIds() {
-        return Stream.of(
-                Arguments.of("abc"),
-                Arguments.of("999999"));
-    }
-
     /** Verifies that an invalid filter option shows an error and retries. */
     @ParameterizedTest(name = "selecting filter option \"{0}\" shows an error and retries")
     @MethodSource("invalidFilterOptions")

@@ -45,6 +45,9 @@ public class DiaryView extends View {
             if (option == 5) {
                 MomentModifyView.printModifyMenu();
             }
+            if (option == 6) {
+                MomentExportView.printExportMenu();
+            }
             if (option == 7) {
                 out();
             }

@@ -20,9 +20,7 @@ import dev.jenny.diary.dtos.MomentDto;
 import dev.jenny.diary.models.Emotion;
 import dev.jenny.diary.singletons.DiaryControllerSingleton;
 
-/**
- * Unit tests for {@link DiaryView}.
- */
+/** Unit tests for {@link DiaryView}. */
 class DiaryViewTest {
 
     private final InputStream inputStream = System.in;
@@ -35,9 +33,7 @@ class DiaryViewTest {
     }
 
     /**
-     * Verifies that choosing option 1 and completing every prompt adds
-     * a new moment, prints the confirmation message, and stores the
-     * moment through the Controller.
+     * Verifies that choosing option 1 adds a moment and prints the confirmation.
      */
     @Test
     void testPrintMenuSelectOption1AddsMomentAndPrintsConfirmation() {
@@ -58,10 +54,7 @@ class DiaryViewTest {
         assertThat(momentWasAdded, is(true));
     }
 
-    /**
-     * Verifies that choosing option 2 lists every stored moment,
-     * including one seeded directly through the Controller beforehand.
-     */
+    /** Verifies that choosing option 2 lists every stored moment. */
     @Test
     void testPrintMenuSelectOption2ListsAllMoments() {
         MomentDto seedMoment = new MomentDto(null,
@@ -81,8 +74,7 @@ class DiaryViewTest {
     }
 
     /**
-     * Verifies that choosing option 3 deletes the moment matching the
-     * given id and prints the confirmation message.
+     * Verifies that choosing option 3 deletes a moment and prints the confirmation.
      */
     @Test
     void testPrintMenuSelectOption3DeletesMomentAndPrintsConfirmation() {
@@ -100,10 +92,7 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Momento eliminado correctamente."));
     }
 
-    /**
-     * Verifies that choosing option 4 and then filtering by emotion
-     * lists only the moments tagged with that emotion.
-     */
+    /** Verifies that filtering by emotion lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByEmotionListsMatchingMoments() {
         MomentDto seedMoment = new MomentDto(null,
@@ -122,10 +111,7 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Miedo"));
     }
 
-    /**
-     * Verifies that choosing option 4 and then filtering by month lists
-     * only the moments that occurred in that month.
-     */
+    /** Verifies that filtering by month lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByMonthListsMatchingMoments() {
         MomentDto seedMoment = new MomentDto(null,
@@ -144,10 +130,7 @@ class DiaryViewTest {
                 containsString("Una excursión a la montaña con el equipo de trabajo"));
     }
 
-    /**
-     * Verifies that choosing option 4 and then filtering by date lists
-     * only the moments that occurred on that exact date.
-     */
+    /** Verifies that filtering by date lists only matching moments. */
     @Test
     void testPrintMenuSelectOption4FilterByDateListsMatchingMoments() {
         MomentDto seedMoment = new MomentDto(null,
@@ -165,10 +148,7 @@ class DiaryViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Una comida familiar el día de mi cumpleaños"));
     }
 
-    /**
-     * Restores the original System.in and System.out after each test,
-     * so later tests aren't affected by this test's redirection.
-     */
+    /** Restores System.in and System.out after each test. */
     @AfterEach
     void tearDown() {
         System.setIn(inputStream);
@@ -176,8 +156,7 @@ class DiaryViewTest {
     }
 
     /**
-     * Feeds the given lines as simulated console input, reinitializing
-     * the shared Scanner so it reads from the new System.in.
+     * Feeds the given lines as simulated console input, refreshing the Scanner.
      *
      * @param lines the lines to feed as input, in order
      */

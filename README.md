@@ -275,6 +275,7 @@ Historias planteadas en la fase de **refinamiento** del proyecto; siguen el mism
 - **[JUnit 5](https://junit.org/junit5/)** — Framework de tests unitarios
 - **[Hamcrest](https://hamcrest.org/JavaHamcrest/)** — Librería de _matchers_ para aserciones legibles (`assertThat`)
 - **[JaCoCo](https://www.jacoco.org/jacoco/)** — Medición de la cobertura de tests
+- **[Mockito](https://site.mockito.org/)** — Mockeo de dependencias estáticas en los tests de vistas y singletons
 - **[Visual Studio Code](https://code.visualstudio.com/)** — Editor usado para desarrollar y gestionar el proyecto
 - **[Markdown](https://www.markdownguide.org/)** — Lenguaje de marcado para el README
 - **[Git](https://git-scm.com/)** / **[GitHub](https://github.com/)** — Control de versiones y alojamiento del proyecto

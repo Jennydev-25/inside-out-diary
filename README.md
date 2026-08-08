@@ -15,8 +15,8 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 - [Historias de usuario y criterios de aceptación](#-historias-de-usuario-y-criterios-de-aceptación)
   - [Refinamiento](#-refinamiento-historias-adicionales)
 - [Testing](#-testing)
+- [Cobertura de tests](#-cobertura-de-tests-coverage)
 - [Tecnologías](#-tecnologías)
-- [Autora](#-autora)
 
 ---
 
@@ -418,6 +418,39 @@ Siguiendo TDD (Red-Green-Refactor), cada capa se testea con la herramienta que m
 | `App` (raíz)   |   2   | Arranque de la aplicación                                           | JUnit 5 + Hamcrest + Mockito       |
 
 Quedan sin testear los constructores de las 9 clases que solo se usan por métodos estáticos (`views` y `App`): nunca se instancian, así que no hay nada real que comprobar ahí.
+
+---
+
+## 📊 Cobertura de tests (coverage)
+
+Reporte generado con **JaCoCo** tras ejecutar `mvn test`. El informe HTML se encuentra en `target/site/jacoco/index.html`. El margen que falta en instrucciones, líneas y métodos son los constructores de las 9 clases que solo se usan por métodos estáticos (`views` y `App`): nunca se instancian, así que JaCoCo los cuenta como sin cubrir.
+
+| Métrica       | Cobertura |
+| ------------- | :-------: |
+| Instrucciones |   98 %    |
+| Ramas         |   100 %   |
+| Líneas        |   98 %    |
+| Métodos       |   92 %    |
+
+<details>
+<summary>Ver desglose por paquete</summary>
+
+| Paquete                  | Instrucciones |   Ramas   |  Líneas  | Métodos  |  Clases   |
+| ------------------------ | :-----------: | :-------: | :------: | :------: | :-------: |
+| `views`                  |     94 %      |   100 %   |   95 %   |   74 %   |   100 %   |
+| `services`               |     100 %     |   100 %   |  100 %   |  100 %   |   100 %   |
+| `models`                 |     100 %     |   100 %   |  100 %   |  100 %   |   100 %   |
+| `dev.jenny.diary` (raíz) |     100 %     |   100 %   |  100 %   |  100 %   |   100 %   |
+| `daos`                   |     100 %     |   100 %   |  100 %   |  100 %   |   100 %   |
+| `controllers`            |     100 %     |     —     |  100 %   |  100 %   |   100 %   |
+| `singletons`             |     100 %     |   100 %   |  100 %   |  100 %   |   100 %   |
+| `database`               |     100 %     |     —     |  100 %   |  100 %   |   100 %   |
+| `repositories`           |     100 %     |     —     |  100 %   |  100 %   |   100 %   |
+| `mappers`                |     100 %     |     —     |  100 %   |  100 %   |   100 %   |
+| `dtos`                   |     100 %     |     —     |  100 %   |  100 %   |   100 %   |
+| **Total**                |   **98 %**    | **100 %** | **98 %** | **92 %** | **100 %** |
+
+</details>
 
 ---
 

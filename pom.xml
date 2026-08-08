@@ -150,11 +150,6 @@
             <goals>
               <goal>report</goal>
             </goals>
-            <configuration>
-              <excludes>
-                <exclude>**/App.class</exclude>
-              </excludes>
-            </configuration>
           </execution>
           <execution>
             <id>check-unit-test</id>
@@ -164,9 +159,6 @@
             </goals>
             <configuration>
               <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-              <excludes>
-                <exclude>**/App.class</exclude>
-              </excludes>
               <rules>
                 <rule>
                   <element>BUNDLE</element>

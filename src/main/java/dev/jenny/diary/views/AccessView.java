@@ -19,7 +19,14 @@ public class AccessView extends View {
             return;
         }
 
-        System.out.println("Contraseña incorrecta. Le quedan " + accessService.getRemainingAttempts() + " intentos.");
-        printAccessMenu();
+        if (accessService.hasAttemptsRemaining()) {
+            System.out.println(
+                    "Contraseña incorrecta. Le quedan " + accessService.getRemainingAttempts() + " intentos.");
+            printAccessMenu();
+            return;
+        }
+
+        System.out.println("Contraseña incorrecta. Ha agotado el número máximo de intentos. Cerrando la aplicación...");
+        SCANNER.close();
     }
 }

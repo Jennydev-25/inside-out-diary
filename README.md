@@ -14,6 +14,7 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 - [Estructura del repositorio](#-estructura-del-repositorio)
 - [Historias de usuario y criterios de aceptación](#-historias-de-usuario-y-criterios-de-aceptación)
   - [Refinamiento](#-refinamiento-historias-adicionales)
+- [Testing](#-testing)
 - [Tecnologías](#-tecnologías)
 - [Autora](#-autora)
 
@@ -391,11 +392,32 @@ Historias planteadas en la fase de **refinamiento** del proyecto; siguen el mism
   - **Cuando** introduzco una contraseña incorrecta
   - **Entonces** se me deniega el acceso y se me permite reintentar hasta agotar el número máximo de intentos
 - **Escenario 3: Denegación definitiva por intentos agotados**
-- **Dado** que he agotado los intentos permitidos
-- **Cuando** intento acceder de nuevo
-- **Entonces** se me deniega el acceso y la aplicación se cierra
+  - **Dado** que he agotado los intentos permitidos
+  - **Cuando** intento acceder de nuevo
+  - **Entonces** se me deniega el acceso y la aplicación se cierra
 
 </details>
+
+---
+
+## 🧪 Testing
+
+Siguiendo TDD (Red-Green-Refactor), cada capa se testea con la herramienta que mejor encaja (JUnit 5 y Hamcrest en todos los casos, sumando Mockito o Fakes propios donde lo encontré necesario).
+
+| Capa           | Tests | Enfoque                                                             | Herramientas                       |
+| -------------- | :---: | ------------------------------------------------------------------- | ---------------------------------- |
+| `views`        |  44   | Flujo de consola (entradas y mensajes)                              | JUnit 5 + Hamcrest + Mockito       |
+| `singletons`   |   3   | Devolver siempre la misma instancia compartida                      | JUnit 5 + Hamcrest + Mockito       |
+| `controllers`  |  11   | Coordinar la vista con el servicio a través de DTOs                 | JUnit 5 + Hamcrest + Fakes propios |
+| `dtos`         |   1   | Los datos que viajan entre capas                                    | JUnit 5 + Hamcrest                 |
+| `services`     |  20   | Añadir, modificar, eliminar y filtrar momentos, y validar el acceso | JUnit 5 + Hamcrest + Fakes propios |
+| `mappers`      |   2   | Convertir cada momento entre modelo y DTO                           | JUnit 5 + Hamcrest                 |
+| `models`       |  18   | Validaciones y comportamiento de cada momento y su emoción          | JUnit 5 + Hamcrest                 |
+| `repositories` |   3   | Guardar y buscar momentos en memoria                                | JUnit 5 + Hamcrest                 |
+| `daos`         |   6   | Escritura a CSV, incluyendo el caso de fallo                        | JUnit 5 + Hamcrest                 |
+| `App` (raíz)   |   2   | Arranque de la aplicación                                           | JUnit 5 + Hamcrest + Mockito       |
+
+Quedan sin testear los constructores de las 9 clases que solo se usan por métodos estáticos (`views` y `App`): nunca se instancian, así que no hay nada real que comprobar ahí.
 
 ---
 

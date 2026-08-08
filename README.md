@@ -19,7 +19,7 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 
 ## 📋 Descripción
 
-**Inside Out Diary** es una aplicación de consola que funciona como un diario personal de emociones. El usuario puede registrar cada momento vivido junto con la emoción que sintió y la fecha en que ocurrió, para luego repasarlo, filtrarlo por emoción o por mes, y eliminarlo.
+**Inside Out Diary** es una aplicación de consola que funciona como un diario personal de emociones, protegido por contraseña. El usuario puede registrar cada momento vivido junto con la emoción que sintió y la fecha en que ocurrió, para después repasarlo, modificarlo, filtrarlo por emoción, mes o fecha exacta, exportarlo a CSV, o eliminarlo.
 
 El proyecto pone en práctica:
 

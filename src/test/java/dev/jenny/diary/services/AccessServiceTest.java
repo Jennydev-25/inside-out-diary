@@ -44,6 +44,19 @@ class AccessServiceTest {
     }
 
     /**
+     * Verifies that getRemainingAttempts reflects the current count,
+     * decreasing by one after each incorrect attempt.
+     */
+    @Test
+    void testGetRemainingAttemptsDecreasesAfterEachFailedAttempt() {
+        accessService.attemptAccess("intento-fallido-1");
+
+        int remaining = accessService.getRemainingAttempts();
+
+        assertThat(remaining, is(equalTo(2)));
+    }
+
+    /**
      * Verifies that hasAttemptsRemaining becomes false after exhausting
      * every allowed attempt with an incorrect password.
      */

@@ -11,6 +11,7 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 - [Descripción](#-descripción)
 - [Enunciado](#-enunciado)
 - [Cómo reproducir el proyecto](#-cómo-reproducir-el-proyecto)
+- [Estructura del repositorio](#-estructura-del-repositorio)
 - [Historias de usuario y criterios de aceptación](#-historias-de-usuario-y-criterios-de-aceptación)
   - [Refinamiento](#-refinamiento-historias-adicionales)
 - [Tecnologías](#-tecnologías)
@@ -105,6 +106,88 @@ mvn exec:java
 ```
 
 La aplicación pide una contraseña antes de dar acceso al diario. Usa `diary2026` por defecto, o el valor que configures en la variable de entorno `DIARY_PASSWORD`. **Solo hay tres intentos antes de que la aplicación se cierre.**
+
+---
+
+## 📁 Estructura del repositorio
+
+```text
+inside-out-diary/
+├── src/
+│   ├── main/java/dev/jenny/diary/
+│   │   ├── App.java
+│   │   ├── contracts/
+│   │   │   ├── InterfaceMomentCsvDao.java
+│   │   │   └── InterfaceMomentRepository.java
+│   │   ├── controllers/
+│   │   │   └── DiaryController.java
+│   │   ├── daos/
+│   │   │   └── MomentCsvDao.java
+│   │   ├── database/
+│   │   │   └── MomentInMemoryDatabase.java
+│   │   ├── dtos/
+│   │   │   └── MomentDto.java
+│   │   ├── mappers/
+│   │   │   └── MomentMapper.java
+│   │   ├── models/
+│   │   │   ├── Emotion.java
+│   │   │   └── Moment.java
+│   │   ├── repositories/
+│   │   │   └── MomentRepository.java
+│   │   ├── services/
+│   │   │   ├── AccessService.java
+│   │   │   └── DiaryService.java
+│   │   ├── singletons/
+│   │   │   ├── AccessServiceSingleton.java
+│   │   │   └── DiaryControllerSingleton.java
+│   │   └── views/
+│   │       ├── AccessView.java
+│   │       ├── DiaryView.java
+│   │       ├── MomentAddView.java
+│   │       ├── MomentDeleteView.java
+│   │       ├── MomentExportView.java
+│   │       ├── MomentFilterView.java
+│   │       ├── MomentListView.java
+│   │       ├── MomentModifyView.java
+│   │       └── View.java
+│   └── test/java/dev/jenny/diary/
+│       ├── AppTest.java
+│       ├── controllers/
+│       │   └── DiaryControllerTest.java
+│       ├── daos/
+│       │   └── MomentCsvDaoTest.java
+│       ├── dtos/
+│       │   └── MomentDtoTest.java
+│       ├── mappers/
+│       │   └── MomentMapperTest.java
+│       ├── mocks/
+│       │   ├── FakeMomentCsvDao.java
+│       │   └── FakeMomentRepository.java
+│       ├── models/
+│       │   ├── EmotionTest.java
+│       │   └── MomentTest.java
+│       ├── repositories/
+│       │   └── MomentRepositoryTest.java
+│       ├── services/
+│       │   ├── AccessServiceTest.java
+│       │   └── DiaryServiceTest.java
+│       ├── singletons/
+│       │   └── AccessServiceSingletonTest.java
+│       └── views/
+│           ├── AccessViewTest.java
+│           ├── DiaryViewTest.java
+│           ├── MomentAddViewTest.java
+│           ├── MomentDeleteViewTest.java
+│           ├── MomentExportViewTest.java
+│           ├── MomentFilterViewTest.java
+│           ├── MomentListViewTest.java
+│           ├── MomentModifyViewTest.java
+│           └── ViewTest.java
+├── .editorconfig
+├── .gitignore
+├── pom.xml
+└── README.md
+```
 
 ---
 

@@ -27,16 +27,27 @@ public class AccessServiceSingleton {
     }
 
     /**
-     * Resolves the password to use: the DIARY_PASSWORD environment
-     * variable when it's set, or a documented default otherwise.
-     * Package-private so it can be tested directly, independently of
-     * when the eager INSTANCE field gets evaluated.
+     * Resolves the password to use, reading it from the DIARY_PASSWORD
+     * environment variable.
      *
      * @return the password to build the AccessService with
      */
     static String resolvePassword() {
-        String password = System.getenv("DIARY_PASSWORD");
-        return password != null ? password : DEFAULT_PASSWORD;
+        return resolvePassword(System.getenv("DIARY_PASSWORD"));
+    }
+
+    /**
+     * Resolves the password to use: the given environment value when
+     * present, or a documented default otherwise. Package-private and
+     * parameterized so both branches can be tested directly, independently
+     * of when the eager INSTANCE field gets evaluated.
+     *
+     * @param environmentPassword the value read from DIARY_PASSWORD, or null if
+     *                            unset
+     * @return the password to build the AccessService with
+     */
+    static String resolvePassword(String environmentPassword) {
+        return environmentPassword != null ? environmentPassword : DEFAULT_PASSWORD;
     }
 
 }

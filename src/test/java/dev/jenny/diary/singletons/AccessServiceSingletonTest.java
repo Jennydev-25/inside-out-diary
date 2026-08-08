@@ -23,4 +23,15 @@ class AccessServiceSingletonTest {
 
         assertThat(password, is(equalTo("diary2026")));
     }
+
+    /**
+     * Verifies that resolvePassword uses the environment value instead
+     * of the default when one is present.
+     */
+    @Test
+    void testResolvePasswordReturnsEnvironmentValueWhenPresent() {
+        String password = AccessServiceSingleton.resolvePassword("mi-contraseña-secreta");
+
+        assertThat(password, is(equalTo("mi-contraseña-secreta")));
+    }
 }

@@ -69,6 +69,21 @@ class AccessViewTest {
         assertThat(outputStreamCaptor.toString(), containsString("Acceso concedido."));
     }
 
+    /** Verifies that exhausting every attempt permanently denies access. */
+    @Test
+    void testPrintAccessMenuWithAllAttemptsExhaustedDeniesAccessPermanently() {
+        simulateInput("intento-fallido-1", "intento-fallido-2", "intento-fallido-3");
+
+        try (MockedStatic<DiaryView> mockedDiaryView = mockStatic(DiaryView.class)) {
+            AccessView.printAccessMenu();
+
+            mockedDiaryView.verifyNoInteractions();
+        }
+
+        assertThat(outputStreamCaptor.toString(),
+                containsString("Ha agotado el número máximo de intentos. Cerrando la aplicación..."));
+    }
+
     @AfterEach
     void tearDown() {
         System.setIn(inputStream);

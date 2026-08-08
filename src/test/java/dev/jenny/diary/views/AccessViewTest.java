@@ -49,6 +49,28 @@ class AccessViewTest {
         }
     }
 
+    /**
+     * Verifies that an incorrect password shows the remaining attempts and retries.
+     */
+    @Test
+    void testPrintAccessMenuWithIncorrectPasswordShowsErrorAndRetries() {
+        try (MockedStatic<AccessServiceSingleton> mockedSingleton = mockStatic(AccessServiceSingleton.class)) {
+            AccessService testAccessService = new AccessService("test-password");
+            mockedSingleton.when(AccessServiceSingleton::getInstance).thenReturn(testAccessService);
+
+            simulateInput("contraseña-incorrecta", "test-password");
+
+            try (MockedStatic<DiaryView> mockedDiaryView = mockStatic(DiaryView.class)) {
+                AccessView.printAccessMenu();
+
+                mockedDiaryView.verify(DiaryView::printMenu);
+            }
+
+            assertThat(outputStreamCaptor.toString(), containsString("Contraseña incorrecta. Le quedan 2 intentos."));
+            assertThat(outputStreamCaptor.toString(), containsString("Acceso concedido."));
+        }
+    }
+
     @AfterEach
     void tearDown() {
         System.setIn(inputStream);

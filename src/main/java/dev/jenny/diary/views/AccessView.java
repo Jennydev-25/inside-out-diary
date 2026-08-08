@@ -1,5 +1,6 @@
 package dev.jenny.diary.views;
 
+import dev.jenny.diary.services.AccessService;
 import dev.jenny.diary.singletons.AccessServiceSingleton;
 
 /** Screen that gates access to the diary behind a password. */
@@ -10,9 +11,15 @@ public class AccessView extends View {
         System.out.println("Introduzca la contraseña para acceder a su diario:");
         String passwordAttempt = SCANNER.nextLine();
 
-        if (AccessServiceSingleton.getInstance().attemptAccess(passwordAttempt)) {
+        AccessService accessService = AccessServiceSingleton.getInstance();
+
+        if (accessService.attemptAccess(passwordAttempt)) {
             System.out.println("Acceso concedido.");
             DiaryView.printMenu();
+            return;
         }
+
+        System.out.println("Contraseña incorrecta. Le quedan " + accessService.getRemainingAttempts() + " intentos.");
+        printAccessMenu();
     }
 }

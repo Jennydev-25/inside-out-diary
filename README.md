@@ -10,6 +10,7 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 
 - [Descripción](#-descripción)
 - [Enunciado](#-enunciado)
+- [Cómo reproducir el proyecto](#-cómo-reproducir-el-proyecto)
 - [Historias de usuario y criterios de aceptación](#-historias-de-usuario-y-criterios-de-aceptación)
   - [Refinamiento](#-refinamiento-historias-adicionales)
 - [Tecnologías](#-tecnologías)
@@ -57,6 +58,53 @@ El enunciado incluye además **seis historias de usuario** (correspondientes a l
 - Tests con una cobertura mínima del **70 %**, incluyendo la captura del informe de cobertura en el README.
 - Tres diagramas: **diagrama UML de casos de uso**, **diagrama de secuencia** y **diagrama UML de clases**.
 - README debidamente trabajado (descripción, pre-requisitos, pasos de instalación, ejecución de tests).
+
+---
+
+## 🚀 Cómo reproducir el proyecto
+
+### Requisitos previos
+
+- **[JDK 21](https://www.oracle.com/java/technologies/downloads/)** instalado — [guía de instalación](https://docs.oracle.com/en/java/javase/21/install/overview-jdk-installation.html)
+- **[Apache Maven](https://maven.apache.org/download.cgi)** instalado y en el `PATH` — [guía de instalación](https://maven.apache.org/install.html)
+- **[Git](https://git-scm.com/downloads)** para clonar el repositorio — [guía de instalación](https://git-scm.com/book/es/v2/Inicio---Sobre-el-Control-de-Versiones-Instalaci%C3%B3n-de-Git)
+
+### Pasos
+
+**1. Comprueba que tienes Java y Maven instalados** (si algún comando no se reconoce, instálalo desde los enlaces de _Requisitos previos_):
+
+```bash
+java --version
+mvn --version
+```
+
+**2. Clona el repositorio:**
+
+```bash
+git clone https://github.com/Jennydev-25/inside-out-diary.git
+```
+
+**3. Entra en la carpeta del proyecto:**
+
+```bash
+cd inside-out-diary
+```
+
+**4. Ejecuta los tests** (compila y genera el reporte de cobertura de JaCoCo):
+
+```bash
+mvn test
+```
+
+El reporte de cobertura se genera en `target/site/jacoco/index.html`, que puedes abrir en el navegador.
+
+**5. Ejecuta la aplicación:**
+
+```bash
+mvn exec:java
+```
+
+La aplicación pide una contraseña antes de dar acceso al diario. Usa `diary2026` por defecto, o el valor que configures en la variable de entorno `DIARY_PASSWORD`. **Solo hay tres intentos antes de que la aplicación se cierre.**
 
 ---
 

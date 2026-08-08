@@ -21,32 +21,35 @@ import dev.jenny.diary.singletons.AccessServiceSingleton;
 /** Unit tests for {@link AccessView}. */
 class AccessViewTest {
 
+    private static final String TEST_PASSWORD = "test-password";
+
     private final InputStream inputStream = System.in;
     private final PrintStream printStream = System.out;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
+    private MockedStatic<AccessServiceSingleton> mockedSingleton;
+
     @BeforeEach
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
+
+        AccessService testAccessService = new AccessService(TEST_PASSWORD);
+        mockedSingleton = mockStatic(AccessServiceSingleton.class);
+        mockedSingleton.when(AccessServiceSingleton::getInstance).thenReturn(testAccessService);
     }
 
     /** Verifies that a correct password grants access and opens the diary menu. */
     @Test
     void testPrintAccessMenuWithCorrectPasswordGrantsAccess() {
-        try (MockedStatic<AccessServiceSingleton> mockedSingleton = mockStatic(AccessServiceSingleton.class)) {
-            AccessService testAccessService = new AccessService("test-password");
-            mockedSingleton.when(AccessServiceSingleton::getInstance).thenReturn(testAccessService);
+        simulateInput(TEST_PASSWORD);
 
-            simulateInput("test-password");
+        try (MockedStatic<DiaryView> mockedDiaryView = mockStatic(DiaryView.class)) {
+            AccessView.printAccessMenu();
 
-            try (MockedStatic<DiaryView> mockedDiaryView = mockStatic(DiaryView.class)) {
-                AccessView.printAccessMenu();
-
-                mockedDiaryView.verify(DiaryView::printMenu);
-            }
-
-            assertThat(outputStreamCaptor.toString(), containsString("Acceso concedido."));
+            mockedDiaryView.verify(DiaryView::printMenu);
         }
+
+        assertThat(outputStreamCaptor.toString(), containsString("Acceso concedido."));
     }
 
     /**
@@ -54,27 +57,23 @@ class AccessViewTest {
      */
     @Test
     void testPrintAccessMenuWithIncorrectPasswordShowsErrorAndRetries() {
-        try (MockedStatic<AccessServiceSingleton> mockedSingleton = mockStatic(AccessServiceSingleton.class)) {
-            AccessService testAccessService = new AccessService("test-password");
-            mockedSingleton.when(AccessServiceSingleton::getInstance).thenReturn(testAccessService);
+        simulateInput("contraseña-incorrecta", TEST_PASSWORD);
 
-            simulateInput("contraseña-incorrecta", "test-password");
+        try (MockedStatic<DiaryView> mockedDiaryView = mockStatic(DiaryView.class)) {
+            AccessView.printAccessMenu();
 
-            try (MockedStatic<DiaryView> mockedDiaryView = mockStatic(DiaryView.class)) {
-                AccessView.printAccessMenu();
-
-                mockedDiaryView.verify(DiaryView::printMenu);
-            }
-
-            assertThat(outputStreamCaptor.toString(), containsString("Contraseña incorrecta. Le quedan 2 intentos."));
-            assertThat(outputStreamCaptor.toString(), containsString("Acceso concedido."));
+            mockedDiaryView.verify(DiaryView::printMenu);
         }
+
+        assertThat(outputStreamCaptor.toString(), containsString("Contraseña incorrecta. Le quedan 2 intentos."));
+        assertThat(outputStreamCaptor.toString(), containsString("Acceso concedido."));
     }
 
     @AfterEach
     void tearDown() {
         System.setIn(inputStream);
         System.setOut(printStream);
+        mockedSingleton.close();
     }
 
     /**

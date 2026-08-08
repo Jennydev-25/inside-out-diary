@@ -259,6 +259,10 @@ Historias planteadas en la fase de **refinamiento** del proyecto; siguen el mism
   - **Dado** que la aplicación está protegida por contraseña
   - **Cuando** introduzco una contraseña incorrecta
   - **Entonces** se me deniega el acceso y se me permite reintentar hasta agotar el número máximo de intentos
+- **Escenario 3: Denegación definitiva por intentos agotados**
+- **Dado** que he agotado los intentos permitidos
+- **Cuando** intento acceder de nuevo
+- **Entonces** se me deniega el acceso y la aplicación se cierra
 
 </details>
 

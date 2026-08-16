@@ -14,6 +14,7 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 - [Estructura del repositorio](#-estructura-del-repositorio)
 - [Historias de usuario y criterios de aceptación](#-historias-de-usuario-y-criterios-de-aceptación)
   - [Refinamiento](#-refinamiento-historias-adicionales)
+- [Diagramas](#-diagramas)
 - [Testing](#-testing)
 - [Cobertura de tests](#-cobertura-de-tests-coverage)
 - [Tecnologías](#-tecnologías)
@@ -395,6 +396,576 @@ Historias planteadas en la fase de **refinamiento** del proyecto; siguen el mism
   - **Dado** que he agotado los intentos permitidos
   - **Cuando** intento acceder de nuevo
   - **Entonces** se me deniega el acceso y la aplicación se cierra
+
+</details>
+
+---
+
+## 📐 Diagramas
+
+Estos tres tipos de diagramas UML muestran la aplicación desde tres ángulos distintos: qué puede hacer el usuario, cómo fluye una acción real por las capas y cómo se relacionan las clases entre sí
+
+<details>
+<summary>Diagrama de casos de uso</summary>
+
+Un caso de uso por historia de usuario, con `<<extend>>` para las 3 formas de filtrar (emoción, mes, fecha) y las 4 de modificar (título, descripción, emoción, fecha)
+
+</details>
+
+<details>
+<summary>Diagrama de secuencia — Acceder con contraseña</summary>
+
+Los tres caminos posibles al iniciar la aplicación: contraseña correcta, incorrecta con intentos restantes, e incorrecta con los intentos agotados
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant AccessView
+    participant AccessServiceSingleton
+    participant AccessService
+    participant DiaryView
+
+    Usuario->>AccessView: inicia la aplicación
+    activate AccessView
+    AccessView->>Usuario: "Introduzca la contraseña"
+    Usuario->>AccessView: contraseña introducida
+    AccessView->>AccessServiceSingleton: getInstance()
+    AccessServiceSingleton-->>AccessView: accessService
+    AccessView->>AccessService: attemptAccess(passwordAttempt)
+
+    alt contraseña correcta
+        AccessService-->>AccessView: true
+        AccessView->>Usuario: "Acceso concedido."
+        AccessView->>DiaryView: printMenu()
+    else contraseña incorrecta, quedan intentos
+        AccessService-->>AccessView: false
+        AccessView->>AccessService: hasAttemptsRemaining()
+        AccessService-->>AccessView: true
+        AccessView->>AccessService: getRemainingAttempts()
+        AccessService-->>AccessView: n
+        AccessView->>Usuario: "Contraseña incorrecta.<br/>Le quedan n intentos."
+        AccessView->>AccessView: printAccessMenu() (reintenta)
+    else contraseña incorrecta, intentos agotados
+        AccessService-->>AccessView: false
+        AccessView->>AccessService: hasAttemptsRemaining()
+        AccessService-->>AccessView: false
+        AccessView->>Usuario: "Contraseña incorrecta.<br/>Ha agotado el número máximo de intentos.<br/>Cerrando la aplicación..."
+        AccessView->>AccessView: SCANNER.close()
+    end
+    deactivate AccessView
+```
+
+</details>
+
+<details>
+<summary>Diagrama de secuencia — Añadir un momento</summary>
+
+Recorre las capas completas: Vista → Controlador → Servicio → Mapper → Repositorio → Base de datos
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant DiaryView
+    participant MomentAddView
+    participant DiaryController
+    participant DiaryService
+    participant MomentMapper
+    participant MomentRepository
+    participant MomentInMemoryDatabase
+
+    Usuario->>DiaryView: selecciona opción 1 "Añadir momento"
+    activate DiaryView
+    DiaryView->>MomentAddView: printAddMenu()
+    deactivate DiaryView
+    activate MomentAddView
+    MomentAddView->>Usuario: solicita título, fecha, descripción y emoción
+    Usuario->>MomentAddView: datos introducidos
+    MomentAddView->>MomentAddView: new MomentDto(null, título, descripción, emoción, fecha)
+    MomentAddView->>DiaryController: addMoment(momentDto)
+    activate DiaryController
+    DiaryController->>DiaryService: addMoment(momentDto)
+    activate DiaryService
+    DiaryService->>MomentMapper: toModel(momentDto)
+    activate MomentMapper
+    MomentMapper-->>DiaryService: moment
+    deactivate MomentMapper
+    DiaryService->>MomentRepository: save(moment)
+    activate MomentRepository
+    MomentRepository->>MomentInMemoryDatabase: store(moment)
+    activate MomentInMemoryDatabase
+    MomentInMemoryDatabase->>MomentInMemoryDatabase: asigna id secuencial (moment.setId)
+    MomentInMemoryDatabase-->>MomentRepository: ok
+    deactivate MomentInMemoryDatabase
+    MomentRepository-->>DiaryService: ok
+    deactivate MomentRepository
+    DiaryService->>MomentMapper: toDto(moment)
+    activate MomentMapper
+    MomentMapper-->>DiaryService: momentDto (con id)
+    deactivate MomentMapper
+    DiaryService-->>DiaryController: momentDto
+    deactivate DiaryService
+    DiaryController-->>MomentAddView: momentDto
+    deactivate DiaryController
+    MomentAddView->>Usuario: "Momento añadido correctamente."
+    MomentAddView->>DiaryView: printMenu()
+    deactivate MomentAddView
+    activate DiaryView
+    DiaryView->>Usuario: muestra menú principal
+    deactivate DiaryView
+```
+
+</details>
+
+<details>
+<summary>Diagrama de secuencia — Eliminar un momento</summary>
+
+Muestra el camino feliz y el de excepción (`DiaryService.findMomentOrThrow`, reutilizado también en `updateMoment*`)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant MomentDeleteView
+    participant DiaryController
+    participant DiaryService
+    participant MomentRepository
+    participant DiaryView
+
+    Usuario->>MomentDeleteView: selecciona opción 3 "Eliminar un momento"
+    activate MomentDeleteView
+    MomentDeleteView->>Usuario: solicita el identificador
+    Usuario->>MomentDeleteView: id introducido
+    MomentDeleteView->>DiaryController: deleteMoment(id)
+    activate DiaryController
+    DiaryController->>DiaryService: deleteMoment(id)
+    activate DiaryService
+    DiaryService->>MomentRepository: findById(id)
+    activate MomentRepository
+    MomentRepository-->>DiaryService: moment
+    deactivate MomentRepository
+
+    alt moment == null (no existe ese id)
+        DiaryService-->>DiaryController: throw IllegalArgumentException
+        DiaryController-->>MomentDeleteView: propaga la excepción
+        MomentDeleteView->>Usuario: "Datos introducidos no válidos.<br/>No existe ningún momento con id X"
+        MomentDeleteView->>MomentDeleteView: printDeleteMenu() (reintenta)
+    else moment encontrado
+        DiaryService->>MomentRepository: deleteById(id)
+        activate MomentRepository
+        MomentRepository-->>DiaryService: ok
+        deactivate MomentRepository
+        DiaryService-->>DiaryController: ok
+        DiaryController-->>MomentDeleteView: ok
+        MomentDeleteView->>Usuario: "Momento eliminado correctamente."
+        MomentDeleteView->>DiaryView: printMenu() (vuelve al menú)
+    end
+
+    deactivate DiaryService
+    deactivate DiaryController
+    deactivate MomentDeleteView
+```
+
+</details>
+
+<details>
+<summary>Diagrama de secuencia — Filtrar los momentos</summary>
+
+Las tres formas de filtrar (emoción, mes, fecha) más el camino de opción fuera de rango.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant MomentFilterView
+    participant DiaryController
+    participant DiaryService
+    participant MomentRepository
+    participant MomentListView
+    participant DiaryView
+
+    Usuario->>MomentFilterView: selecciona opción 4 "Filtrar los momentos"
+    activate MomentFilterView
+    MomentFilterView->>Usuario: "Filtrar por...: 1.Emoción 2.Mes 3.Fecha"
+    Usuario->>MomentFilterView: opción elegida
+
+    alt opción fuera de 1-3
+        MomentFilterView->>Usuario: "Datos introducidos no válidos.<br/>Número introducido fuera de rango"
+        MomentFilterView->>MomentFilterView: printFilterMenu() (reintenta)
+    else 1. Emoción
+        MomentFilterView->>Usuario: solicita la emoción
+        Usuario->>MomentFilterView: emoción elegida
+        MomentFilterView->>DiaryController: getMomentsByEmotion(emotion)
+        DiaryController->>DiaryService: getMomentsByEmotion(emotion)
+        DiaryService->>MomentRepository: findAll()
+        MomentRepository-->>DiaryService: moments
+        DiaryService->>DiaryService: filtra por emotion == emoción
+        DiaryService-->>DiaryController: lista de MomentDto
+        DiaryController-->>MomentFilterView: lista de MomentDto
+        MomentFilterView->>MomentListView: printMomentsList(moments)
+        MomentListView->>Usuario: lista de momentos filtrados
+        MomentFilterView->>DiaryView: printMenu()
+    else 2. Mes
+        MomentFilterView->>Usuario: solicita el mes (mm/aaaa)
+        Usuario->>MomentFilterView: mes introducido
+        MomentFilterView->>DiaryController: getMomentsByMonth(yearMonth)
+        DiaryController->>DiaryService: getMomentsByMonth(yearMonth)
+        DiaryService->>MomentRepository: findAll()
+        MomentRepository-->>DiaryService: moments
+        DiaryService->>DiaryService: filtra por YearMonth == yearMonth
+        DiaryService-->>DiaryController: lista de MomentDto
+        DiaryController-->>MomentFilterView: lista de MomentDto
+        MomentFilterView->>MomentListView: printMomentsList(moments)
+        MomentListView->>Usuario: lista de momentos filtrados
+        MomentFilterView->>DiaryView: printMenu()
+    else 3. Fecha
+        MomentFilterView->>Usuario: solicita la fecha (dd/mm/aaaa)
+        Usuario->>MomentFilterView: fecha introducida
+        MomentFilterView->>DiaryController: getMomentsByDate(date)
+        DiaryController->>DiaryService: getMomentsByDate(date)
+        DiaryService->>MomentRepository: findAll()
+        MomentRepository-->>DiaryService: moments
+        DiaryService->>DiaryService: filtra por momentDate == date
+        DiaryService-->>DiaryController: lista de MomentDto
+        DiaryController-->>MomentFilterView: lista de MomentDto
+        MomentFilterView->>MomentListView: printMomentsList(moments)
+        MomentListView->>Usuario: lista de momentos filtrados
+        MomentFilterView->>DiaryView: printMenu()
+    end
+    deactivate MomentFilterView
+```
+
+</details>
+
+<details>
+<summary>Diagrama de secuencia — Modificar un momento</summary>
+
+Mismo patrón de validación que Filtrar (opción fuera de rango) y mismo patrón de error que Eliminar (`findMomentOrThrow`). `updateMomentX`/`setX` representan los 4 pares reales según el campo elegido (`updateMomentTitle`/`setTitle`, `updateMomentDescription`/`setDescription`, `updateMomentEmotion`/`setEmotion`, `updateMomentDate`/`setMomentDate`)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Usuario
+    participant MomentModifyView
+    participant DiaryController
+    participant DiaryService
+    participant MomentRepository
+    participant Moment
+    participant DiaryView
+
+    Usuario->>MomentModifyView: selecciona opción 5 "Modificar un momento"
+    activate MomentModifyView
+    MomentModifyView->>Usuario: solicita el identificador
+    Usuario->>MomentModifyView: id introducido
+    MomentModifyView->>Usuario: "Modificar...: 1.Título 2.Descripción 3.Emoción 4.Fecha"
+    Usuario->>MomentModifyView: campo elegido
+
+    alt campo fuera de 1-4
+        MomentModifyView->>Usuario: "Datos introducidos no válidos.<br/>Número introducido fuera de rango"
+        MomentModifyView->>MomentModifyView: printModifyMenu() (reintenta)
+    else campo válido
+        MomentModifyView->>Usuario: solicita el nuevo valor (según el campo)
+        Usuario->>MomentModifyView: nuevo valor introducido
+
+        MomentModifyView->>DiaryController: updateMomentX(id, nuevoValor)
+        activate DiaryController
+        DiaryController->>DiaryService: updateMomentX(id, nuevoValor)
+        activate DiaryService
+        DiaryService->>MomentRepository: findById(id)
+        activate MomentRepository
+        MomentRepository-->>DiaryService: moment
+        deactivate MomentRepository
+
+        alt moment == null (no existe ese id)
+            DiaryService-->>DiaryController: throw IllegalArgumentException
+            DiaryController-->>MomentModifyView: propaga la excepción
+            MomentModifyView->>Usuario: "Datos introducidos no válidos.<br/>No existe ningún momento con id X"
+            MomentModifyView->>MomentModifyView: printModifyMenu() (reintenta)
+        else moment encontrado
+            DiaryService->>Moment: setX(nuevoValor)
+            activate Moment
+            Moment->>Moment: refreshUpdatedAt()
+            Moment-->>DiaryService: ok
+            deactivate Moment
+            DiaryService->>DiaryService: momentMapper.toDto(moment)
+            DiaryService-->>DiaryController: momentDto
+            DiaryController-->>MomentModifyView: momentDto
+            MomentModifyView->>Usuario: "Momento modificado correctamente."
+            MomentModifyView->>DiaryView: printMenu()
+        end
+
+        deactivate DiaryService
+        deactivate DiaryController
+    end
+
+    deactivate MomentModifyView
+```
+
+</details>
+
+<details>
+<summary>Diagrama de clases</summary>
+
+Arquitectura en capas completa: Vista → Controlador → Servicio → Mapper/Repositorio (+ DAO para CSV) → Base de datos, con los dos Singleton (`AccessServiceSingleton` eager, `DiaryControllerSingleton` lazy) y el patrón DTO+Mapper entre `Moment` y `MomentDto`
+
+```mermaid
+classDiagram
+direction TB
+
+class App {
+    -List~ExampleMoment~ EXAMPLE_MOMENTS$
+    +main(args)$ void
+    ~addExampleMoments(diaryController)$ void
+}
+
+class View {
+    <<abstract>>
+    #Scanner SCANNER$
+    #DateTimeFormatter DATE_FORMATTER$
+    #printEmotionOptions()$ void
+}
+class AccessView {
+    +printAccessMenu()$ void
+}
+class DiaryView {
+    +printMenu()$ void
+}
+class MomentAddView {
+    -DiaryController CONTROLLER$
+    +printAddMenu()$ void
+}
+class MomentDeleteView {
+    -DiaryController CONTROLLER$
+    +printDeleteMenu()$ void
+}
+class MomentFilterView {
+    -DiaryController CONTROLLER$
+    +printFilterMenu()$ void
+}
+class MomentListView {
+    -DiaryController CONTROLLER$
+    +printListMenu()$ void
+    ~printMomentsList(moments)$ void
+}
+class MomentModifyView {
+    -DiaryController CONTROLLER$
+    +printModifyMenu()$ void
+}
+class MomentExportView {
+    -DiaryController CONTROLLER$
+    +printExportMenu()$ void
+}
+
+class DiaryControllerSingleton {
+    -String CSV_PATH$
+    -DiaryController INSTANCE$
+    -DiaryControllerSingleton()
+    +getInstance()$ DiaryController
+}
+class AccessServiceSingleton {
+    -String DEFAULT_PASSWORD$
+    -AccessService INSTANCE$
+    -AccessServiceSingleton()
+    +getInstance()$ AccessService
+    ~resolvePassword()$ String
+    ~resolvePassword(environmentPassword)$ String
+}
+
+class DiaryController {
+    -DiaryService diaryService
+    +DiaryController(diaryService)
+    +addMoment(momentDto) MomentDto
+    +getAllMoments() List~MomentDto~
+    +deleteMoment(id) void
+    +getMomentsByEmotion(emotion) List~MomentDto~
+    +getMomentsByMonth(yearMonth) List~MomentDto~
+    +getMomentsByDate(date) List~MomentDto~
+    +updateMomentEmotion(id, emotion) MomentDto
+    +updateMomentTitle(id, title) MomentDto
+    +updateMomentDescription(id, description) MomentDto
+    +updateMomentDate(id, momentDate) MomentDto
+    +exportMoments() void
+}
+
+class DiaryService {
+    -InterfaceMomentRepository momentRepository
+    -InterfaceMomentCsvDao momentCsvDao
+    -MomentMapper momentMapper
+    +DiaryService(momentRepository, momentCsvDao)
+    +addMoment(momentDto) MomentDto
+    +getAllMoments() List~MomentDto~
+    +deleteMoment(id) void
+    +getMomentsByEmotion(emotion) List~MomentDto~
+    +getMomentsByMonth(yearMonth) List~MomentDto~
+    +getMomentsByDate(date) List~MomentDto~
+    +updateMomentEmotion(id, emotion) MomentDto
+    +updateMomentTitle(id, title) MomentDto
+    +updateMomentDescription(id, description) MomentDto
+    +updateMomentDate(id, momentDate) MomentDto
+    +exportMoments() void
+    -toDtos(moments) List~MomentDto~
+    -findMomentOrThrow(id) Moment
+}
+class AccessService {
+    -int MAX_ATTEMPTS$
+    -String correctPassword
+    -int remainingAttempts
+    +AccessService(correctPassword)
+    +attemptAccess(passwordAttempt) boolean
+    +hasAttemptsRemaining() boolean
+    +getRemainingAttempts() int
+    +getMaxAttempts() int
+}
+
+class InterfaceMomentRepository {
+    <<interface>>
+    +save(moment) void
+    +findAll() List~Moment~
+    +findById(id) Moment
+    +deleteById(id) void
+}
+class InterfaceMomentCsvDao {
+    <<interface>>
+    +write(moments) void
+}
+
+class MomentRepository {
+    -MomentInMemoryDatabase database
+    +MomentRepository()
+    +save(moment) void
+    +findAll() List~Moment~
+    +findById(id) Moment
+    +deleteById(id) void
+}
+
+class MomentInMemoryDatabase {
+    -Map~Long, Moment~ moments
+    +store(moment) void
+    +findAll() Map~Long, Moment~
+    +deleteById(id) void
+}
+
+class MomentCsvDao {
+    -String HEADER$
+    -Path path
+    +MomentCsvDao(path)
+    +write(moments) void
+    -toCsvLine(moment) String
+    -escapeField(field) String
+}
+
+class MomentMapper {
+    +toDto(moment) MomentDto
+    +toModel(dto) Moment
+}
+
+class MomentDto {
+    <<record>>
+    +Long id
+    +String title
+    +String description
+    +Emotion emotion
+    +LocalDate momentDate
+}
+
+class Moment {
+    -Long id
+    -String title
+    -String description
+    -Emotion emotion
+    -LocalDate momentDate
+    -LocalDateTime createdAt
+    -LocalDateTime updatedAt
+    +Moment(title, description, emotion, momentDate)
+    +getId() Long
+    +getTitle() String
+    +getDescription() String
+    +getEmotion() Emotion
+    +getMomentDate() LocalDate
+    +getCreatedAt() LocalDateTime
+    +getUpdatedAt() LocalDateTime
+    +setId(id) void
+    +setEmotion(emotion) void
+    +setTitle(title) void
+    +setDescription(description) void
+    +setMomentDate(momentDate) void
+    -setTimestamps() void
+    -refreshUpdatedAt() void
+}
+class Emotion {
+    <<enumeration>>
+    ALEGRIA
+    TRISTEZA
+    IRA
+    ASCO
+    MIEDO
+    ANSIEDAD
+    ENVIDIA
+    VERGUENZA
+    ABURRIMIENTO
+    NOSTALGIA
+    -String displayName
+    +getDisplayName() String
+    +fromOption(option)$ Emotion
+}
+
+%% ---- Relaciones ----
+View <|-- AccessView
+View <|-- DiaryView
+View <|-- MomentAddView
+View <|-- MomentDeleteView
+View <|-- MomentFilterView
+View <|-- MomentListView
+View <|-- MomentModifyView
+View <|-- MomentExportView
+
+App ..> AccessView : arranca
+App ..> DiaryControllerSingleton : usa
+App ..> MomentDto : crea
+App ..> Emotion : usa
+
+AccessView ..> AccessServiceSingleton : usa
+AccessView ..> DiaryView : navega a
+
+DiaryView ..> MomentAddView : despacha
+DiaryView ..> MomentDeleteView : despacha
+DiaryView ..> MomentFilterView : despacha
+DiaryView ..> MomentListView : despacha
+DiaryView ..> MomentModifyView : despacha
+DiaryView ..> MomentExportView : despacha
+
+MomentFilterView ..> MomentListView : usa
+MomentAddView ..> DiaryControllerSingleton : usa
+MomentDeleteView ..> DiaryControllerSingleton : usa
+MomentFilterView ..> DiaryControllerSingleton : usa
+MomentListView ..> DiaryControllerSingleton : usa
+MomentModifyView ..> DiaryControllerSingleton : usa
+MomentExportView ..> DiaryControllerSingleton : usa
+
+DiaryControllerSingleton ..> DiaryController : crea
+DiaryControllerSingleton ..> MomentRepository : crea
+DiaryControllerSingleton ..> MomentCsvDao : crea
+AccessServiceSingleton ..> AccessService : crea
+
+DiaryController --> "1" DiaryService
+
+MomentRepository ..|> InterfaceMomentRepository
+MomentCsvDao ..|> InterfaceMomentCsvDao
+
+DiaryService --> "1" InterfaceMomentRepository
+DiaryService --> "1" InterfaceMomentCsvDao
+DiaryService *-- "1" MomentMapper
+
+MomentMapper ..> Moment : convierte
+MomentMapper ..> MomentDto : convierte
+
+MomentRepository *-- "1" MomentInMemoryDatabase
+MomentInMemoryDatabase "1" o-- "0..*" Moment : almacena
+
+Moment "1" --> "1" Emotion
+MomentDto ..> Emotion
+```
 
 </details>
 

@@ -18,6 +18,8 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 - [Testing](#-testing)
 - [Cobertura de tests](#-cobertura-de-tests-coverage)
 - [Tecnologías](#-tecnologías)
+- [Recursos](#-recursos)
+- [Autora](#-autora)
 
 ---
 
@@ -1036,6 +1038,18 @@ Reporte generado con **JaCoCo** tras ejecutar `mvn test`. El informe HTML se enc
 - **[Visual Studio Code](https://code.visualstudio.com/)** — Editor usado para desarrollar y gestionar el proyecto
 - **[Markdown](https://www.markdownguide.org/)** — Lenguaje de marcado para el README
 - **[Git](https://git-scm.com/)** / **[GitHub](https://github.com/)** — Control de versiones y alojamiento del proyecto
+
+---
+
+## 📚 Recursos
+
+- **[java.time (Javadoc JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html)** — Documentación oficial de las clases de fecha y hora de Java
+- **[Java User Input (W3Schools)](https://www.w3schools.com/java/java_user_input.asp)** — Guía para leer datos de teclado por consola en Java
+- **[Testing System.out.println() (Baeldung)](https://www.baeldung.com/java-testing-system-out-println)** — Guía para testear la salida por consola en Java
+- **[java.nio.file (Javadoc JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/package-summary.html)** — Documentación oficial de la API de archivos de Java
+- **[RFC 4180](https://www.rfc-editor.org/rfc/rfc4180)** — Estándar que define el formato de un archivo CSV
+- **[OMG UML Specification 2.5.1](https://www.omg.org/spec/UML/2.5.1/PDF)** — Notación oficial de los diagramas UML
+- **[Mermaid – Diagram Syntax](https://mermaid.js.org/intro/)** — Documentación de Mermaid para diagramas de secuencia y de clases
 
 ---
 

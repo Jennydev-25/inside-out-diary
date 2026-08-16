@@ -6,6 +6,14 @@ Aplicación de consola en **Java 21** con **Maven** para registrar los **momento
 
 ---
 
+## 📸 Vista rápida
+
+|                    **Test Explorer**                    |                     **Cobertura (JaCoCo)**                      |
+| :-----------------------------------------------------: | :-------------------------------------------------------------: |
+| ![Tests pasando](assets/images/test-explorer/views.png) | ![Cobertura JaCoCo](assets/images/coverage/coverage-jacoco.png) |
+
+---
+
 ## 📑 Índice
 
 - [Descripción](#-descripción)
@@ -64,6 +72,8 @@ El enunciado incluye además **seis historias de usuario** (correspondientes a l
 - Tres diagramas: **diagrama UML de casos de uso**, **diagrama de secuencia** y **diagrama UML de clases**.
 - README debidamente trabajado (descripción, pre-requisitos, pasos de instalación, ejecución de tests).
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 🚀 Cómo reproducir el proyecto
@@ -111,12 +121,32 @@ mvn exec:java
 
 La aplicación pide una contraseña antes de dar acceso al diario. Usa `diary2026` por defecto, o el valor que configures en la variable de entorno `DIARY_PASSWORD`. **Solo hay tres intentos antes de que la aplicación se cierre.**
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 📁 Estructura del repositorio
 
 ```text
 inside-out-diary/
+├── assets/
+│   └── images/
+│       ├── diagrams/
+│       │   └── use-case-diagram.png
+│       ├── coverage/
+│       │   └── coverage-jacoco.png
+│       └── test-explorer/
+│           ├── app.png
+│           ├── controllers.png
+│           ├── daos.png
+│           ├── dtos-mappers.png
+│           ├── models-emotion.png
+│           ├── models-moment.png
+│           ├── repositories.png
+│           ├── services-access.png
+│           ├── services-diary.png
+│           ├── singletons.png
+│           └── views.png
 ├── src/
 │   ├── main/java/dev/jenny/diary/
 │   │   ├── App.java
@@ -192,6 +222,8 @@ inside-out-diary/
 ├── pom.xml
 └── README.md
 ```
+
+[Volver al índice](#-índice)
 
 ---
 
@@ -331,6 +363,8 @@ Estas son las historias de usuario del proyecto con sus criterios de aceptación
 
 </details>
 
+[Volver al índice](#-índice)
+
 ---
 
 ### ✨ Refinamiento (historias adicionales)
@@ -401,6 +435,8 @@ Historias planteadas en la fase de **refinamiento** del proyecto; siguen el mism
 
 </details>
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 📐 Diagramas
@@ -409,6 +445,8 @@ Estos tres tipos de diagramas UML muestran la aplicación desde tres ángulos di
 
 <details>
 <summary>Diagrama de casos de uso</summary>
+
+![Diagrama de casos de uso](assets/images/diagrams/use-case-diagram.png)
 
 Un caso de uso por historia de usuario, con `<<extend>>` para las 3 formas de filtrar (emoción, mes, fecha) y las 4 de modificar (título, descripción, emoción, fecha)
 
@@ -971,11 +1009,26 @@ MomentDto ..> Emotion
 
 </details>
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 🧪 Testing
 
-Siguiendo TDD (Red-Green-Refactor), cada capa se testea con la herramienta que mejor encaja (JUnit 5 y Hamcrest en todos los casos, sumando Mockito o Fakes propios donde lo encontré necesario).
+Siguiendo TDD (Red-Green-Refactor), cada capa se testea con la herramienta que mejor encaja (JUnit 5 y Hamcrest en todos los casos, sumando Mockito o Fakes propios donde lo encontré necesario)
+
+<details>
+<summary>Ver capturas del Test Explorer por capa</summary>
+
+|                     ![Tests App](assets/images/test-explorer/app.png)<br>**App**                     |                   ![Tests Views](assets/images/test-explorer/views.png)<br>**Views**                    |
+| :--------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+|         ![Tests Controllers](assets/images/test-explorer/controllers.png)<br>**Controllers**         | ![Tests AccessService](assets/images/test-explorer/services-access.png)<br>**Services · AccessService** |
+| ![Tests DiaryService](assets/images/test-explorer/services-diary.png)<br>**Services · DiaryService** |         ![Tests Repositories](assets/images/test-explorer/repositories.png)<br>**Repositories**         |
+|                   ![Tests Daos](assets/images/test-explorer/daos.png)<br>**Daos**                    |       ![Tests Dtos y Mappers](assets/images/test-explorer/dtos-mappers.png)<br>**Dtos & Mappers**       |
+|       ![Tests Emotion](assets/images/test-explorer/models-emotion.png)<br>**Models · Emotion**       |          ![Tests Moment](assets/images/test-explorer/models-moment.png)<br>**Models · Moment**          |
+|          ![Tests Singletons](assets/images/test-explorer/singletons.png)<br>**Singletons**           |                                                                                                         |
+
+</details>
 
 | Capa           | Tests | Enfoque                                                             | Herramientas                       |
 | -------------- | :---: | ------------------------------------------------------------------- | ---------------------------------- |
@@ -992,11 +1045,15 @@ Siguiendo TDD (Red-Green-Refactor), cada capa se testea con la herramienta que m
 
 Quedan sin testear los constructores de las 9 clases que solo se usan por métodos estáticos (`views` y `App`): nunca se instancian, así que no hay nada real que comprobar ahí.
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 📊 Cobertura de tests (coverage)
 
 Reporte generado con **JaCoCo** tras ejecutar `mvn test`. El informe HTML se encuentra en `target/site/jacoco/index.html`. El margen que falta en instrucciones, líneas y métodos son los constructores de las 9 clases que solo se usan por métodos estáticos (`views` y `App`): nunca se instancian, así que JaCoCo los cuenta como sin cubrir.
+
+![Cobertura JaCoCo](assets/images/coverage/coverage-jacoco.png)
 
 | Métrica       | Cobertura |
 | ------------- | :-------: |
@@ -1025,6 +1082,8 @@ Reporte generado con **JaCoCo** tras ejecutar `mvn test`. El informe HTML se enc
 
 </details>
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 🛠️ Tecnologías
@@ -1039,6 +1098,8 @@ Reporte generado con **JaCoCo** tras ejecutar `mvn test`. El informe HTML se enc
 - **[Markdown](https://www.markdownguide.org/)** — Lenguaje de marcado para el README
 - **[Git](https://git-scm.com/)** / **[GitHub](https://github.com/)** — Control de versiones y alojamiento del proyecto
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 📚 Recursos
@@ -1051,8 +1112,12 @@ Reporte generado con **JaCoCo** tras ejecutar `mvn test`. El informe HTML se enc
 - **[OMG UML Specification 2.5.1](https://www.omg.org/spec/UML/2.5.1/PDF)** — Notación oficial de los diagramas UML
 - **[Mermaid – Diagram Syntax](https://mermaid.js.org/intro/)** — Documentación de Mermaid para diagramas de secuencia y de clases
 
+[Volver al índice](#-índice)
+
 ---
 
 ## 👩‍💻 Autora
 
 **[Jenny Sánchez Requejo](https://github.com/Jennydev-25)**
+
+[Volver arriba](#-inside-out-diary--diario-de-emociones-en-java)
